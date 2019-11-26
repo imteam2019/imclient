@@ -15,6 +15,7 @@
 **
 ****************************************************************************/
 #include <QDialog>
+#include <QtDebug>
 
 namespace Ui {
 class NewFriend;
@@ -30,6 +31,8 @@ public:
 
 private slots:
     void on_btnAdd_clicked();
+    void on_btdEn_clicked();
+
 private:
     Ui::NewFriend *ui;
 };

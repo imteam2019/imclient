@@ -148,8 +148,8 @@ void MainWindow::stringToHtmlFilter(QString &str){
 void MainWindow::on_btnAddFriend_clicked()
 {
     NewFriend *mw=new NewFriend;
-    mw->setModal(true);
-    mw->setParent(this);
+  //  mw->setModal(true);
+  //  mw->setParent(this);
     mw->show();
    // QMessageBox::information(nullptr,"new","new friend added.");
    // this->close();
