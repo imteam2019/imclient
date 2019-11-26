@@ -30,11 +30,6 @@ public:
 
 private slots:
     void on_btnAdd_clicked();
-
-    void on_btnEncrypt_clicked();
-
-    void on_btnDecrypt_clicked();
-
 private:
     Ui::NewFriend *ui;
 };

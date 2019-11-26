@@ -19,11 +19,6 @@ public:
 
     int encrypt ( unsigned char key[8], unsigned char* data, int blocks = 1 );
     int decrypt ( unsigned char key[8], unsigned char* data, int blocks = 1 );
-
-    // Encrypt/decrypt any size data,according to a special method.
-    // Before calling yencrypt, copy data to a new buffer with size
-    // calculated by extend.
-
     int yencrypt ( unsigned char key[8], unsigned char* data, int size );
     int ydecrypt ( unsigned char key[8], unsigned char* in, int blocks, int* size = 0 );
     int extend ( int size ) { return (size/8+1)*8; };
