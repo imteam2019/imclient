@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     authenticate.cpp \
+    des.cpp \
     encrypt.cpp \
     friends.cpp \
     main.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     authenticate.h \
+    des.h   \
     encrypt.h \
     friends.h \
     mainwindow.h \

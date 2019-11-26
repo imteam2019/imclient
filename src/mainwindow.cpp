@@ -151,6 +151,6 @@ void MainWindow::on_btnAddFriend_clicked()
     mw->setModal(true);
     mw->setParent(this);
     mw->show();
-    QMessageBox::information(nullptr,"new","new friend added.");
+   // QMessageBox::information(nullptr,"new","new friend added.");
    // this->close();
 }
