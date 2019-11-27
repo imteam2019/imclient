@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,7 +25,8 @@ SOURCES += \
     mainwindow.cpp \
     message.cpp \
     newfriend.cpp \
-    person.cpp
+    person.cpp \
+    settingshandle.cpp
 
 HEADERS += \
     authenticate.h \
@@ -34,7 +36,8 @@ HEADERS += \
     mainwindow.h \
     message.h \
     newfriend.h \
-    person.h
+    person.h \
+    settingshandle.h
 
 FORMS += \
     authenticate.ui \

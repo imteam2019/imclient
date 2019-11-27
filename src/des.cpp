@@ -77,7 +77,7 @@ int DES::ydecrypt ( unsigned char key[8], unsigned char* data, int blocks, int* 
     deskey ( key, DECRYPT );
     if ( !decrypt ( data, data, blocks) )
         return 0;
-    if ( size != 0 )
+    if ( size )
     {
         int pos = blocks*8-1;
         char endChar = data[pos];
