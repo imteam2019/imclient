@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "imtextedit.h"
 #include <QMainWindow>
 #include <QTextDocument>
 #include <QTextFrame>
@@ -32,5 +33,6 @@ private:
     bool setMsgStyle();
     void stringToHtmlFilter(QString &str);
     void stringToHtml(QString &str,QColor crl);
+    IMTextEdit *teMessage;
 };
 #endif // MAINWINDOW_H

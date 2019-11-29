@@ -5,10 +5,14 @@ SettingsHandle::SettingsHandle()
 
 }
 
+ SettingsHandle::~SettingsHandle(){
+
+}
+
 /**
  * @brief SettingsHandle::loadSettings 按照指定的文件名加载其中的配置信息，并返回
  * @param fileName 配置文件名的指针
- * @param filetype 指定是何种数据格式的文件，json或xml
+ * @param filetype 指定是何种数据格式的文件，目前只支持json或xml
  * @param isEncrypt 文件是否有加密
  * @return 装载配置关键字和值的QVariantMap对象指针，如果不成功则为空指针；
  */
@@ -18,7 +22,7 @@ QVariantMap * SettingsHandle::loadSettings(const QString *fileName, int filetype
     if(!fileName || fileName->length()<=0)
         return nullptr;
     if(filetype!=SettingsHandle::XML && filetype!=SettingsHandle::JSON){
-        qDebug()<<"Error:filetype is not exsit.\n"<<endl;
+        qDebug()<<"Error:filetype is not be support.\n"<<endl;
         return nullptr;
     }
     QFile file(*fileName);

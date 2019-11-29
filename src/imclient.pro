@@ -21,6 +21,7 @@ SOURCES += \
     des.cpp \
     encrypt.cpp \
     friends.cpp \
+    imtextedit.cpp \
     main.cpp \
     mainwindow.cpp \
     message.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     des.h   \
     encrypt.h \
     friends.h \
+    imtextedit.h \
     mainwindow.h \
     message.h \
     newfriend.h \

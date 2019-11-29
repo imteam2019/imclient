@@ -12,6 +12,14 @@ MainWindow::MainWindow(QWidget *parent)
     this->osFormat=new QTextFrameFormat();
     this->setMsgStyle();
 
+    this->teMessage=new IMTextEdit();
+    this->teMessage->setParent(this);
+    this->teMessage->setGeometry(220,420,411,141);
+    this->teMessage->setDisabled(false);
+    this->teMessage->setHidden(false);
+    this->teMessage->setReadOnly(false);
+
+
     /////////////
     /***
     this->setMsgStyle();
@@ -119,15 +127,25 @@ void MainWindow::on_btnSendMsg_clicked()
     Person *p=new Person;
 
     p->setID("hhww");
-    strMsg=p->getID()+":\n"+ui->teMessage->toHtml();
+    strMsg=p->getID()+":\n"+this->teMessage->toHtml();//.replace(QString("\\\""), QString("\""));
+    QTextDocument *myMsg=this->teMessage->document();
+
+
+
+
+    qDebug()<<this->teMessage->toHtml()<<endl;
     QTextDocument *doc=ui->tbList->document();
     QTextBlock insert_block = doc->lastBlock().next();
      QTextCursor cur = ui->tbList->textCursor();
 
      cur.insertFrame(*this->myFormat);
-     cur.setPosition(insert_block.position()+insert_block.length()-1);
+     //cur.setPosition(insert_block.position()+insert_block.length()-1);
+     cur.insertBlock();
+     cur.setPosition(doc->lastBlock().position()+insert_block.length()-1);
      cur.insertHtml(strMsg);
-     ui->teMessage->setText("");
+     cur.insertHtml("<br>");
+     //cur.in
+     this->teMessage->setText("");
 
 
 }

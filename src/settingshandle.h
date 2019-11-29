@@ -24,8 +24,8 @@ class SettingsHandle
 public:
     enum enumType{JSON,XML};
     SettingsHandle();
-    ~SettingsHandle();
-    QVariantMap * loadSettings(const QString *fileName,int filetype=SettingsHandle::JSON,bool isEncrypt=false);
+    virtual ~SettingsHandle();
+    virtual QVariantMap * loadSettings(const QString *fileName,int filetype=SettingsHandle::JSON,bool isEncrypt=false);
 
 private:
     QVariantMap * loadJson(QString *);

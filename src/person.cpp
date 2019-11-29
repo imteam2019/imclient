@@ -5,6 +5,8 @@ Person::Person()
 {
     this->strID=new QString;
     this->strNickName=new QString;
+    this->strSign=new QString;
+    this->intStatus=Person::online;
 }
 
 Person::Person(const Person& person){
@@ -15,6 +17,7 @@ Person::Person(const Person& person){
 Person::~Person(){
     delete this->strID;
     delete this->strNickName;
+    delete this->strSign;
 }
 
 Person & Person::operator =(const Person &p)
@@ -42,15 +45,6 @@ QString Person::getID(){
 }
 
 /**
- * @brief Person::getNickName
- * @return QString
- * @desc 返回当前昵称
- */
-QString Person::getNickName(){
-    return *this->strNickName;
-}
-
-/**
  * @brief Person::setID
  * @param id
  * @desc 设定指定id，如果为空则不修改
@@ -58,6 +52,15 @@ QString Person::getNickName(){
 void Person::setID(QString id){
     if(id.length()>0)
        *this->strID=id;
+}
+
+/**
+ * @brief Person::getNickName
+ * @return QString
+ * @desc 返回当前昵称
+ */
+QString Person::getNickName(){
+    return *this->strNickName;
 }
 
 /**
@@ -69,3 +72,38 @@ void Person::setNickName(QString nickName){
     if(nickName.length()>0)
         *this->strNickName=nickName;
 }
+
+/**
+ * @brief Person::getSign 获取签名
+ * @return 返回当前签名
+ */
+QString Person::getSign(){
+    return *this->strSign;
+}
+
+/**
+ * @brief Person::setSign 根据指定字符串设定签名
+ * @param strSign
+ */
+void Person::setSign(QString strSign){
+    if(strSign.length()>0)
+        *this->strSign=strSign;
+}
+
+/**
+ * @brief Person::getStatus 获取当前状态
+ * @return
+ */
+int Person::getStatus(){
+    return this->intStatus;
+}
+
+/**
+ * @brief Person::setStatus 设置指定状态
+ * @param status
+ */
+void Person::setStatus(int status){
+    if(status>=Person::online && status<=Person::away)
+        this->intStatus=status;
+}
+
