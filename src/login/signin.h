@@ -1,20 +1,9 @@
 #ifndef SIGNIN_H
 #define SIGNIN_H
 
-/****************************************************************************
-**
-** Copyright (C)
-** Contact:
-**
-** This file is part of the Authenticate module of the IM Toolkit.
-**
-** Created by: Shengbo.Zeng
-** Created date: 11/24/2019
-**
-**
-**
-****************************************************************************/
 #include <QDialog>
+#include "common/data.h"
+#include "common/encrypt.h"
 
 namespace Ui {
 class Signin;
@@ -29,11 +18,16 @@ public:
     ~Signin();
 
 private slots:
+    void on_pbCancel_clicked();
 
-    void on_btnOK_clicked();
+    void on_pbOk_clicked();
+
+    void on_pbSignup_clicked();
 
 private:
     Ui::Signin *ui;
+
+    bool login(QString strLoginInfo);
 };
 
-#endif // AUTHENTICATE_H
+#endif // SIGNIN_H

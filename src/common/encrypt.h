@@ -14,7 +14,10 @@
 **
 ****************************************************************************/
 #include <QString>
+#include<QTime>
 #include <QByteArray>
+#include <QDebug>
+
 class Encrypt
 {
 public:
@@ -23,6 +26,9 @@ public:
     QString * encrypt(const QString *);
     QByteArray * decrypt(const QByteArray *);
     QString * decrypt(const QString *);
+    static QString getRandKey();
+private:
+    static const int KEY_RAND_LENGTH=128;//本地随机密钥长度
 };
 
 #endif // CRYPTO_H

@@ -1,6 +1,7 @@
 #include "signin.h"
-#include "mainwindow.h"
 #include "ui_signin.h"
+#include "mainwindow.h"
+#include "signup.h"
 
 Signin::Signin(QWidget *parent) :
     QDialog(parent),
@@ -14,10 +15,34 @@ Signin::~Signin()
     delete ui;
 }
 
-void Signin::on_btnOK_clicked()
+bool Signin::login(QString strLoginInfo){
+    // todo
+
+    return false;
+}
+void Signin::on_pbCancel_clicked()
 {
-    MainWindow *mw=new MainWindow;
-    mw->show();
+    this->close();
+}
+
+void Signin::on_pbOk_clicked()
+{
+    QString strLoginInfo;
+    //todo 验证用户身份
+
+    if(this->login(strLoginInfo)){
+        MainWindow *w=new MainWindow;
+        w->show();
+        this->close();
+    }else{
+        ui->lePasswd->setFocus();
+    }
+}
+
+void Signin::on_pbSignup_clicked()
+{
+    Signup *su=new Signup;
+    su->show();
     this->close();
 
 }

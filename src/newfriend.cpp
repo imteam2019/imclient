@@ -1,7 +1,7 @@
 #include "newfriend.h"
 #include "ui_newfriend.h"
 #include <QMessageBox>
-#include "des.h"
+#include "common/des.h"
 
 NewFriend::NewFriend(QWidget *parent) :
     QDialog(parent),
