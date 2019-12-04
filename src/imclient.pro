@@ -17,7 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    authenticate.cpp \
     des.cpp \
     encrypt.cpp \
     friends.cpp \
@@ -27,10 +26,11 @@ SOURCES += \
     message.cpp \
     newfriend.cpp \
     person.cpp \
-    settingshandle.cpp
+    settingshandle.cpp \
+    signin.cpp \
+    signup.cpp
 
 HEADERS += \
-    authenticate.h \
     des.h   \
     encrypt.h \
     friends.h \
@@ -39,12 +39,15 @@ HEADERS += \
     message.h \
     newfriend.h \
     person.h \
-    settingshandle.h
+    settingshandle.h \
+    signin.h \
+    signup.h
 
 FORMS += \
-    authenticate.ui \
     mainwindow.ui \
-    newfriend.ui
+    newfriend.ui \
+    signin.ui \
+    signup.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
