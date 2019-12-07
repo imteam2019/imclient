@@ -5,11 +5,89 @@ Signup::Signup(QWidget *parent) : QDialog(parent),
                                   ui(new Ui::Signup)
 {
     ui->setupUi(this);
+    //"http://47.88.231.69/MsgServer/publicKey/public.key"
+    this->hc=new HTTPConn();
+    this->hc->setURL("http://47.88.231.69/MsgServer/publicKey/public.key");
+    this->hc->registCallBack(getPublicKey,this);
+    if(!this->hc->get()){
+        QMessageBox::information(this,"网络错误","访问地址出错，请检查网络或地址是否正确。");
+    }
 }
 
 Signup::~Signup()
 {
     delete ui;
+    delete this->hc;
+}
+
+
+/**
+ * @brief Signup::getPublicKey 获取公钥回调函数
+ * @param reply 返回的数据
+ * @param replyFlag 返回标志，参考HTTPConn::RESP_SUCCESS和HTTPConn::RESP_FAILED
+ * @param pObject
+ */
+void Signup::getPublicKey(QString reply, int replyFlag, void *pObject){
+    Signup *pthis= (Signup*)pObject;
+    if(replyFlag==HTTPConn::HttpResponseStatus::HTTPStatusOK){
+         pthis->doGetPublicKey(reply,replyFlag);
+        }else{
+        pthis->doGetPublicKey("",replyFlag);
+    }
+}
+
+/**
+ * @brief Signup::registe 注册事务回调函数
+ * @param reply 返回的数据
+ * @param replyFlag 返回标志，参考HTTPConn::RESP_SUCCESS和HTTPConn::RESP_FAILED
+ * @param pObject
+ */
+void Signup::registe(QString reply, int replyFlag, void *pObject){
+    Signup *pthis= (Signup*)pObject;
+    pthis->doGetRegiste(reply,replyFlag);
+}
+
+/**
+ * @brief Signup::doGetPublicKey 公钥获取后的数据处理
+ * @param strReply 网络请求返回的数据
+ */
+void Signup::doGetPublicKey(QString strReply, int replyFlag)
+{
+    switch (replyFlag) {
+        case  HTTPConn::HttpResponseStatus::HTTPStatusOK:{
+                this->strPK=strReply;
+            }
+            break;
+        case HTTPConn::RESP_FAILED:{
+                QMessageBox::information(this,"网络异常","网络或服务器异常，请稍后再试.");
+            }
+                break;
+        default:{
+                QMessageBox::information(this,"服务器错误",strReply);
+            }
+    }
+    qDebug()<<strReply<<endl;
+}
+
+/**
+ * @brief Signup::doGetRegiste 提交注册信息后处理服务器响应
+ * @param strReply 服务器响应返回数据
+ * @param replyFlag 服务器处理返回状态
+ */
+void Signup::doGetRegiste(QString strReply, int replyFlag){
+    switch (replyFlag) {
+        case  HTTPConn::HttpResponseStatus::HTTPStatusOK:{
+                QMessageBox::information(this,"注册成功",strReply);
+                (new Signin())->show();
+                this->close();
+            }
+            break;
+
+        default:{
+                 QMessageBox::information(this,"注册失败",strReply);
+            }
+    }
+    qDebug()<<strReply<<endl;
 }
 
 void Signup::on_pbOk_clicked()
@@ -35,7 +113,34 @@ void Signup::on_pbOk_clicked()
     s.insert("email", ui->leEmail->text());
     s.insert("instruction", ui->teDesc->toHtml());
 
-    QMessageBox::information(this, "", Data::format(&s, Data::JSON));
+
+    this->hc->registCallBack(registe,this);
+    //this->hc->connect();
+
+    // Post http://serverip/regist?c=加密后的注册信息&p=加密后的密钥
+   // QMessageBox::information(this, "", Data::format(&s, Data::JSON));
+    //QMessageBox::information(this,"公钥：",this->strPK);
+
+        this->hc->setURL("http://47.88.231.69/regist?c="+Data::format(&s, Data::JSON)+"&p=sdlkfjladskf");
+  //  this->hc->setURL("http://47.88.231.69/regist");
+    //    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+    //    request.setRawHeader("Accept","text/html, application/xhtml+xml, */*");
+    //    request.setRawHeader("Referer","http://localhost:8888/login");
+    //    request.setRawHeader("Accept-Language","zh-CN");
+    //    request.setRawHeader("X-Requested-With","XMLHttpRequest");
+    //    request.setRawHeader("User-Agent","Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
+    //    request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    //    request.setRawHeader("Accept-Encoding","gzip,deflate");
+    //    request.setRawHeader("Host","localhost:8888");
+    //    request.setRawHeader("Content-Length","18");
+    //    request.setRawHeader("Connection","Keep-Alive");
+    //    request.setRawHeader("Cache-Control","no-cache");
+
+       // QByteArray postData;
+       // postData.append("myname=lk&mypwd=33");
+
+        this->hc->post(Data::format(&s, Data::JSON));
+
 }
 
 /**
@@ -47,7 +152,7 @@ QString Signup::checkInput()
     QString s = "";
     if ((ui->leUsername->text().length()) <= 0)
         s = "请输入你要注册的用户名称。";
-    if (ui->lePasswd->text().length() <= 0 || ui->lePasswdRe->text() <= 0)
+    if (ui->lePasswd->text().length() <= 0 || ui->lePasswdRe->text().length() <= 0)
         s = "密码及验证不能为空。";
     if (ui->lePasswd->text() != ui->lePasswdRe->text())
         s = "两次密码不匹配，请重新输入。";
@@ -64,4 +169,11 @@ QString Signup::checkInput()
 void Signup::on_pbCancel_clicked()
 {
     this->close();
+}
+
+void Signup::on_teDesc_textChanged()
+{
+    int i=ui->teDesc->toPlainText().length();
+
+    ui->lbDescLength->setText(QString::number(i,10)+"/100");
 }

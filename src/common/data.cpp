@@ -35,7 +35,7 @@ QString Data::format(QMap<QString,QVariant> *data,int formatName){
             break;
         }
     }
-    qDebug()<<*s<<endl;
+   qDebug()<<*s<<endl;
     return *s;
 }
 

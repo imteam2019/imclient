@@ -10,6 +10,7 @@ CONFIG += c++11
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+# DEFINES += QT_NO_DEBUG_OUTPUT
 
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -27,6 +28,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     message.cpp \
+    network/httpconn.cpp \
     newfriend.cpp \
     person.cpp \
     settingshandle.cpp \
@@ -78,6 +80,7 @@ HEADERS += \
     login/signup.h \
     mainwindow.h \
     message.h \
+    network/httpconn.h \
     newfriend.h \
     person.h \
     settingshandle.h \
@@ -92,3 +95,29 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/release/ -lcrypto
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/debug/ -lcrypto
+else:unix: LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/ -lcrypto
+
+INCLUDEPATH += $$PWD/../../../../../usr/local/openssl/include
+DEPENDPATH += $$PWD/../../../../../usr/local/openssl/include
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/libcrypto.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/libcrypto.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/crypto.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/crypto.lib
+else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/libcrypto.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/release/ -lssl
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/debug/ -lssl
+else:unix: LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/ -lssl
+
+INCLUDEPATH += $$PWD/../../../../../usr/local/openssl/include
+DEPENDPATH += $$PWD/../../../../../usr/local/openssl/include
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/libssl.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/libssl.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/ssl.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/ssl.lib
+else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/libssl.a

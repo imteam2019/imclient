@@ -8,12 +8,12 @@
 
 int main(int argc, char *argv[])
 {
+   // Encrypt::getMD5(Encrypt::getRandKey().toLocal8Bit());
+
+
     QApplication a(argc, argv);
     Signup w;
     w.show();
     return a.exec();
 
-
-    //Data::testJson();
-    //Encrypt::getRandKey();
 }

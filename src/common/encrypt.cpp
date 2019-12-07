@@ -1,5 +1,6 @@
 #include "encrypt.h"
-
+#include <string.h>
+#include <stdio.h>
 Encrypt::Encrypt()
 {
 }
@@ -15,15 +16,14 @@ QString Encrypt::getRandKey()
     char key[Encrypt::KEY_RAND_LENGTH];
     qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
 
-    for (int i = 0; i < 10; i++)
-    {
+
         for (int i = 0; i < Encrypt::KEY_RAND_LENGTH; i++)
         {
             key[i] = (qrand() % (126 - 32)) + 32;
         }
 
         qDebug() << QString(key) << endl;
-    }
+
     return QString(key);
 }
 
@@ -91,4 +91,26 @@ QString *Encrypt::decrypt(const QString *strMsg)
         //可以转化后调用QByteArray * Encrypt::decrypt(const QByteArray *)
     }
     return dec;
+}
+
+
+QString Encrypt::getMD5(QByteArray data){
+    size_t length=(size_t)data.length();
+    if(0==length) return "";
+
+    MD5_CTX c;
+    unsigned char md5[16];
+
+    memset(md5,0,sizeof(md5));
+    MD5_Init(&c);
+    MD5_Update(&c,data.data(),length);
+    MD5_Final(md5,&c);
+    QByteArray *s=new QByteArray((char*)md5,16);
+    //for(i=0;i<16;i++){
+     //  printf("%2X",md5[i]);
+      qDebug()<<s->toHex();
+     // return new QString((s->toHex().toUpper());
+    //}
+    //qDebug()<<endl;
+
 }
