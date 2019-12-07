@@ -19,7 +19,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     common/data.cpp \
-    common/des.cpp \
     common/encrypt.cpp \
     friends.cpp \
     imtextedit.cpp \
@@ -35,7 +34,6 @@ SOURCES += \
 
 HEADERS += \
     common/data.h \
-    common/des.h \
     common/encrypt.h \
     common/rapidjson/allocators.h \
     common/rapidjson/cursorstreamwrapper.h \

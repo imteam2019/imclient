@@ -53,6 +53,7 @@ void Signup::registe(QString reply, int replyFlag, void *pObject){
  */
 void Signup::doGetPublicKey(QString strReply, int replyFlag)
 {
+    const char * test="网络异常,网络或服务器异常，请稍后再试.";
     switch (replyFlag) {
         case  HTTPConn::HttpResponseStatus::HTTPStatusOK:{
                 this->strPK=strReply;
@@ -66,7 +67,11 @@ void Signup::doGetPublicKey(QString strReply, int replyFlag)
                 QMessageBox::information(this,"服务器错误",strReply);
             }
     }
-    qDebug()<<strReply<<endl;
+  //  qDebug()<<strReply<<endl;
+
+    qDebug()<<"=========测试rsa加密============"<<endl;
+    QByteArray *b=new QByteArray(test);
+    Encrypt::getRSAEncrypt(*b,strReply);
 }
 
 /**

@@ -13,26 +13,37 @@
 **
 **
 ****************************************************************************/
-#include <QString>
-#include<QTime>
 #include <QByteArray>
 #include <QDebug>
-//#include "md5.h"
+#include <QString>
+#include <QTime>
+
+#include "openssl/aes.h"
+#include "openssl/bio.h"
+#include "openssl/des.h"
 #include "openssl/md5.h"
+#include "openssl/rsa.h"
+#include "openssl/ssl.h"
 
-class Encrypt
-{
-public:
-    Encrypt();
-    QByteArray * encrypt(const QByteArray *);
-    QString * encrypt(const QString *);
-    QByteArray * decrypt(const QByteArray *);
-    QString * decrypt(const QString *);
-    static QString getMD5(QByteArray data);
-    static QString getRandKey();
+class Encrypt {
+ public:
+  Encrypt();
+  QByteArray *encrypt(const QByteArray *);
+  QString *encrypt(const QString *);
+  QByteArray *decrypt(const QByteArray *);
+  QString *decrypt(const QString *);
+  static QString getMD5(QByteArray data);
+  // static QString getBase64(QByteArray data);
+  static QString getRandKey();
+  static QByteArray *getRSAEncrypt(QByteArray data, QString strPublicKey);
+  static QByteArray *getRSADecrypt(QByteArray data, QString strPrivateKey);
+  static QByteArray *getAESEncrypt(QByteArray data, QString strKey,
+                                   int intMode);
+  static QByteArray *getAESDecrypt(QByteArray data, QString strKey,
+                                   int intMode);
 
-private:
-    static const int KEY_RAND_LENGTH=32;//本地随机密钥长度
+ private:
+  static const int KEY_RAND_LENGTH = 32;  //本地随机密钥长度
 };
 
-#endif // CRYPTO_H
+#endif  // CRYPTO_H

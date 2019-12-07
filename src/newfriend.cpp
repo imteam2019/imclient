@@ -1,7 +1,7 @@
 #include "newfriend.h"
 #include "ui_newfriend.h"
 #include <QMessageBox>
-#include "common/des.h"
+//#include "common/des.h"
 
 NewFriend::NewFriend(QWidget *parent) :
     QDialog(parent),
@@ -52,8 +52,8 @@ void NewFriend::on_btdEn_clicked()
     qDebug()<<QString("原文base64:")<<text<<"\n"<<endl;
 
     // 加密后显示到界面
-    DES *des=new DES;
-    des->encrypt(key,(unsigned char*)text,des->extend(textbase64->length()));
+    //DES *des=new DES;
+    //des->encrypt(key,(unsigned char*)text,des->extend(textbase64->length()));
 
    // std::string str=(char*)text;
    // ui->teDecrypt->setPlainText(QString::fromLocal8Bit(text,-1));
@@ -62,7 +62,7 @@ void NewFriend::on_btdEn_clicked()
 
 
     //解密后显示到界面
-    des->decrypt(key,(unsigned char*)text,des->extend(textbase64->length()));
+    //des->decrypt(key,(unsigned char*)text,des->extend(textbase64->length()));
 
     qDebug()<<QString("解密后的内容：\n")<<endl;
      qDebug()<<text<<"\n"<<endl;
