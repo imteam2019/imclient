@@ -21,6 +21,7 @@
 #include "openssl/aes.h"
 #include "openssl/bio.h"
 #include "openssl/des.h"
+#include "openssl/err.h"
 #include "openssl/md5.h"
 #include "openssl/rsa.h"
 #include "openssl/ssl.h"
@@ -32,18 +33,28 @@ class Encrypt {
   QString *encrypt(const QString *);
   QByteArray *decrypt(const QByteArray *);
   QString *decrypt(const QString *);
-  static QString getMD5(QByteArray data);
+  QString getMD5(QByteArray data);
   // static QString getBase64(QByteArray data);
-  static QString getRandKey();
-  static QByteArray *getRSAEncrypt(QByteArray data, QString strPublicKey);
-  static QByteArray *getRSADecrypt(QByteArray data, QString strPrivateKey);
-  static QByteArray *getAESEncrypt(QByteArray data, QString strKey,
-                                   int intMode);
-  static QByteArray *getAESDecrypt(QByteArray data, QString strKey,
-                                   int intMode);
+  QString getRandKey();
+  QByteArray *getRSAEncrypt(QByteArray data);
+  QByteArray *getRSAEncrypt(QByteArray data, QString strPublicKey);
+  QByteArray *getRSADecrypt(QByteArray data);
+  QByteArray *getRSADecrypt(QByteArray data, QString strPrivateKey);
+  QByteArray *getAESEncrypt(QByteArray data, QString strKey, int intMode);
+  QByteArray *getAESDecrypt(QByteArray data, QString strKey, int intMode);
+
+  int generateRSAKey();
+  RSA *getRSAKey();
 
  private:
-  static const int KEY_RAND_LENGTH = 32;  //本地随机密钥长度
+  static const int KEY_RAND_LENGTH = 16;   //本地随机密钥长度
+  static const int RSA_BIT_LENGTH = 1024;  // RSA 位数长度
+  static const int RSA_BLOCK_SIZE = RSA_BIT_LENGTH / 8;  // RSA块大小
+
+  RSA *rsa;
+  RSA *rsaPub;
+  RSA *rsaPri;
+  int test(int);
 };
 
 #endif  // CRYPTO_H

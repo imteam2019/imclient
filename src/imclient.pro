@@ -1,6 +1,7 @@
 QT       += core gui
 QT       += network
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -28,6 +29,7 @@ SOURCES += \
     mainwindow.cpp \
     message.cpp \
     network/httpconn.cpp \
+    network/tcpconn.cpp \
     newfriend.cpp \
     person.cpp \
     settingshandle.cpp \
@@ -79,6 +81,7 @@ HEADERS += \
     mainwindow.h \
     message.h \
     network/httpconn.h \
+    network/tcpconn.h \
     newfriend.h \
     person.h \
     settingshandle.h \
