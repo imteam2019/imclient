@@ -13,19 +13,22 @@
 **
 **
 ****************************************************************************/
+#include <QDataStream>
+#include <QDateTime>
 #include <QDebug>
+#include <QHostAddress>
 #include <QtGlobal>
 
 struct MSGHeader {
-  size_t msgHeaderLength;  //消息头长度
-  size_t msgBodyLength;    //消息体长度
+  qint64 msgHeaderLength;  //消息头长度
+  qint64 msgBodyLength;    //消息体长度
   char senderID[1024];     //发送方ID；
   char receiverID[1024];   //接收方ID;
-  time_t sendTimes;        //消息发送时间，自Epoch（1970-01-01 00:00:00
+  qint64 sendTimeStamp;    //消息发送时间，自Epoch（1970-01-01 00:00:00
                            // UTC）起经过的时间，以秒为单位
-  size_t status;           //消息当前状态
-  size_t sendCount;        // 消息发送次数计数
-  size_t msgType;          //消息类型，在线消息：0，离线消息：1
+  qint64 status;           //消息当前状态
+  qint64 sendCount;        // 消息发送次数计数
+  qint64 msgType;          //消息类型，在线消息：0，离线消息：1
 };
 
 struct MSGBody {
@@ -37,7 +40,7 @@ struct MSG {
   MSGBody body;
 };
 
-class Message {
+class Message : public QObject {
  public:
   // static const MSG_BODY_LENGTH_MAX=
   enum MsgStatus {          //定义消息生命周期的各种状态
@@ -47,24 +50,47 @@ class Message {
     MSG_STATUS_FAILED = 3    //消息发送失败，并已超过重发限制
   };
   Message();
+  Message(const Message &m);
   ~Message();
 
-  size_t getMsgSize();
-  size_t getMsgHeaderSize();
-  size_t getMsgBodySize();
+  Message &operator=(const Message &m);
+  bool operator==(const Message &m);
 
-  const MSGHeader *getMsgHeader();
-  const MSGBody *getMsgBody();
-  const MSG *getMsg();
+  qint64 getMsgSize();
+  qint64 getMsgHeaderSize();
+  qint64 getMsgBodySize();
+
+  MSGHeader *getMsgHeader();
+  MSGBody *getMsgBody();
+  MSG *getMsg();
 
   void setSenderID(char *strSenderID, int len);
   void setReciverID(char *strReciverID, int len);
   void setMsgContent(QByteArray *msgContent);
 
+  friend bool operator<(const Message &m1, const Message &m2);
+
+  //友元声明，流插入运算符和流提取运算符函数
+  friend QDataStream &operator<<(QDataStream &out, Message &m);
+  friend QDataStream &operator>>(QDataStream &in, Message &m);
+
  private:
   MSGHeader *mh;  //消息头指针
   MSGBody *mb;    //消息体指针
   MSG *msg;       //消息指针
-};
 
+  void init();
+  MSGHeader *msgHeaderCopy(MSGHeader &d);
+};
+/*
+//自身声明，小于号函数必须用两个参数的全局函数
+bool operator<(const Message &m1, const Message &m2);
+
+//自身声明，流插入运算符和流提取运算符函数
+QDataStream &operator<<(QDataStream &out, const Message &m);
+QDataStream &operator>>(QDataStream &in, Message &m);
+
+QDataStream &operator<<(QDataStream &out, const MSGHeader &h);
+QDataStream &operator>>(QDataStream &in, MSGHeader &h);
+*/
 #endif  // MESSAGE_H

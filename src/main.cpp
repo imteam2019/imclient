@@ -9,7 +9,9 @@
 #include "common/encrypt.h"
 #include "login/signin.h"
 #include "login/signup.h"
+#include "mainwindow.h"
 #include "message.h"
+#include "network/tcpconn.h"
 
 int main(int argc, char *argv[]) {
   // Encrypt::getMD5(Encrypt::getRandKey().toLocal8Bit());
@@ -65,7 +67,7 @@ int main(int argc, char *argv[]) {
 
   // qDebug() << b.data() << endl;
 
-  QByteArray c = "1234567890abcdefghijklmnopqrst";
+  // QByteArray c = "1234567890abcdefghijklmnopqrst";
   /*
   QString key = e.getRandKey();
   QByteArray *s = e.getAESEncrypt(b, key, 0);
@@ -79,7 +81,7 @@ int main(int argc, char *argv[]) {
   w.show();
   return a.exec();
 */
-  Message a;
+  // Message a;
   //  printf("msg size:\t%ul\n", a.getMsgSize());
   // printf("msg header size:\t%ul\n", a.getMsgHeaderSize());
   //  printf("msg body size:\t%ul\n", a.getMsgBodySize());
@@ -103,18 +105,30 @@ int main(int argc, char *argv[]) {
     size_t sendCount;  // 消息发送次数计数
     size_t msgType;    //消息类型，在线消息：0，离线消息：1
   };
+  /*
+   * Message m;
+  MSGHeader h = *m.getMsgHeader();
+  m.setSenderID("abcdefg", 7);
+  qDebug() << &m << endl;
 
-  printf("message header size of is:\t %i\n", a.getMsgHeaderSize());
-  a.setSenderID("123456789012345678901234567890", 30);
 
-  printf("message header size of is:\t %i\n", a.getMsgHeaderSize());
-  printf("test size of is:\t %i\n", sizeof(test));
+    printf("message header size of is:\t %i\n", a.getMsgHeaderSize());
+    a.setSenderID("123456789012345678901234567890", 30);
 
-  printf("message body size of is:\t %i\n", a.getMsgBodySize());
-  a.setMsgContent(&b);
-  printf("message body size of is:\t %i\n", a.getMsgBodySize());
-  a.setMsgContent(&c);
-  printf("message body size of is:\t %i\n", a.getMsgBodySize());
-  a.setMsgContent(&c);
-  printf("message body size of is:\t %i\n", a.getMsgBodySize());
+    printf("message header size of is:\t %i\n", a.getMsgHeaderSize());
+    printf("test size of is:\t %i\n", sizeof(test));
+
+    printf("message body size of is:\t %i\n", a.getMsgBodySize());
+    a.setMsgContent(&b);
+    printf("message body size of is:\t %i\n", a.getMsgBodySize());
+    a.setMsgContent(&c);
+    printf("message body size of is:\t %i\n", a.getMsgBodySize());
+    a.setMsgContent(&c);
+    printf("message body size of is:\t %i\n", a.getMsgBodySize());
+  */
+
+  QApplication a(argc, argv);
+  MainWindow w;
+  w.show();
+  return a.exec();
 }
