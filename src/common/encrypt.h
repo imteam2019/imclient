@@ -13,35 +13,45 @@
 **
 **
 ****************************************************************************/
+#include <openssl/bio.h>
+#include <openssl/buffer.h>
+#include <openssl/evp.h>
+
 #include <QByteArray>
-#include <QDebug>
 #include <QString>
 #include <QTime>
+#include <iostream>
+#include <ostream>
 
 #include "openssl/aes.h"
-#include "openssl/bio.h"
 #include "openssl/des.h"
 #include "openssl/err.h"
 #include "openssl/md5.h"
 #include "openssl/rsa.h"
 #include "openssl/ssl.h"
 
+using namespace std;
 class Encrypt {
  public:
   Encrypt();
+  std::string *encrypt(const std::string *);
   QByteArray *encrypt(const QByteArray *);
-  QString *encrypt(const QString *);
   QByteArray *decrypt(const QByteArray *);
-  QString *decrypt(const QString *);
-  QString getMD5(QByteArray data);
+  std::string *decrypt(const std::string *);
+  std::string getMD5(std::string *data, unsigned int len);
   // static QString getBase64(QByteArray data);
-  QString getRandKey();
+  std::string getRandKey();
   QByteArray *getRSAEncrypt(QByteArray data);
-  QByteArray *getRSAEncrypt(QByteArray data, QString strPublicKey);
+  QByteArray *getRSAEncrypt(QByteArray data, std::string strPublicKey);
   QByteArray *getRSADecrypt(QByteArray data);
-  QByteArray *getRSADecrypt(QByteArray data, QString strPrivateKey);
-  QByteArray *getAESEncrypt(QByteArray data, QString strKey, int intMode);
-  QByteArray *getAESDecrypt(QByteArray data, QString strKey, int intMode);
+  QByteArray *getRSADecrypt(QByteArray data, std::string strPrivateKey);
+  QByteArray *getAESEncrypt(QByteArray data, std::string strKey, int intMode);
+  QByteArray *getAESDecrypt(QByteArray data, std::string strKey, int intMode);
+
+  static std::string *getBase64Encode(const char *buffer, long long length,
+                                      bool newLine);
+  static std::string *getBase64Decode(const char *buffer, long long length,
+                                      bool newLine);
 
   int generateRSAKey();
   RSA *getRSAKey();
@@ -54,7 +64,6 @@ class Encrypt {
   RSA *rsa;
   RSA *rsaPub;
   RSA *rsaPri;
-  int test(int);
 };
 
 #endif  // CRYPTO_H

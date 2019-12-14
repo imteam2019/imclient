@@ -1,12 +1,6 @@
-#include "data.h"
+#include "message/data.h"
 
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/filewritestream.h"
-#include "rapidjson/prettywriter.h"
-#include "rapidjson/stringbuffer.h"
 using namespace std;
-using namespace rapidjson;
 Data::Data() {}
 
 /**
@@ -35,8 +29,8 @@ QString Data::format(QMap<QString, QVariant> *data, int formatName) {
     }
   }
 #ifdef MY_DEBUG_ON
-  qDebug() << "=========Encoded data =============" << endl;
-  qDebug() << *s << endl;
+  std::cout << "=========Encoded data =============" << endl;
+  std::cout << s->toStdString() << endl;
 #endif
   return *s;
 }
@@ -71,12 +65,4 @@ QString Data::formatAsJson(QMap<QString, QVariant> *data, int formatName) {
 
 QString Data::formatAsXml(QMap<QString, QVariant> *data, int formatName) {
   return "";
-}
-void Data::testJson() {
-  const char json[] = "{ \"hello\" : \"world\" }";
-  rapidjson::Document d;
-  d.Parse<0>(json);
-
-  printf("%s\n", d["hello"].GetString());
-  return;
 }

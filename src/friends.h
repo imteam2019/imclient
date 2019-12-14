@@ -13,27 +13,30 @@
 **
 **
 ****************************************************************************/
-#include "person.h"
-#include <QString>
-#include <QLinkedList>
 
-class Friends
-{
-public:
-    Friends();
-    ~Friends();
-    Person * getFriend();
-    Person * getNext();
-    bool add(Person *);//加入好友
-    Person * del(Person *);//删除指定的好友
-    Person * find(QString id);//按id找到指定好友
-private:
-    QLinkedList<Person> *plist;
-    void setNext(Person *next);
-    bool saveFriendtoLocal(QLinkedList<Person> *);
-    bool saveFriendtoRemote(QLinkedList<Person> *);
-    QLinkedList<Person> * loadFriendFromLocal();
-    QLinkedList<Person> * loadFriendFromRemote();
+#include <iostream>
+#include <map>
+#include <string>
+
+#include "person.h"
+
+typedef std::map<std::string, Person> MAPFRIENDS;
+class Friends {
+ public:
+  Friends();
+  ~Friends();
+  Person *getFriend();
+  Person *getNext();
+  bool add(Person *);            //加入好友
+  Person *del(Person *);         //删除指定的好友
+  Person *find(std::string id);  //按id找到指定好友
+ private:
+  MAPFRIENDS *fmap;
+  void setNext(Person *next);
+  bool saveFriendtoLocal(MAPFRIENDS *);
+  bool saveFriendtoRemote(MAPFRIENDS *);
+  MAPFRIENDS *loadFriendFromLocal();
+  MAPFRIENDS *loadFriendFromRemote();
 };
 
-#endif // FRIEND_H
+#endif  // FRIEND_H

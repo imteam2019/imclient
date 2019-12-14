@@ -62,9 +62,9 @@ void Signup::doGetPublicKey(QString strReply, int replyFlag) {
       QMessageBox::information(this, "服务器错误", strReply);
     }
   }
-  //  qDebug()<<strReply<<endl;
+  //  std::cout<<strReply<<endl;
 
-  // qDebug() << "=========测试rsa加密============" << endl;
+  // std::cout << "=========测试rsa加密============" << endl;
   // QByteArray *b = new QByteArray(test);
   // Encrypt::getRSAEncrypt(*b,strReply);
 }
@@ -86,7 +86,7 @@ void Signup::doGetRegiste(QString strReply, int replyFlag) {
       QMessageBox::information(this, "注册失败", strReply);
     }
   }
-  // qDebug() << strReply << endl;
+  // std::cout << strReply << endl;
 }
 
 void Signup::on_pbOk_clicked() {
@@ -106,7 +106,7 @@ void Signup::on_pbOk_clicked() {
 
   QMap<QString, QVariant> s;
   Encrypt en;
-  QString strRandKey;
+  std::string strRandKey;
   en.generateRSAKey();
   strRandKey = en.getRandKey();
 
@@ -118,13 +118,14 @@ void Signup::on_pbOk_clicked() {
   QString strTmp;
   {
     s.insert("username", ui->leUsername->text());
-    s.insert("password", en.getMD5(ui->lePasswd->text().toLocal8Bit()));
+    std::string tmp = ui->lePasswd->text().toLocal8Bit().toStdString();
+    s.insert("password", en.getMD5(&tmp, (unsigned int)tmp.size()).data());
     s.insert("telephone", ui->lePhoneNumber->text());
     s.insert("email", ui->leEmail->text());
     s.insert("instruction", ui->teDesc->toHtml());
     bc = en.getAESEncrypt(Data::format(&s, Data::JSON).toLocal8Bit(),
                           strRandKey, 0);
-    bp = en.getRSAEncrypt(strRandKey.toLocal8Bit());
+    bp = en.getRSAEncrypt(strRandKey.data());
 
     c = QString::fromLocal8Bit((*bc).toBase64());
     p = QString::fromLocal8Bit((*bp).toBase64());
@@ -157,7 +158,8 @@ void Signup::on_pbOk_clicked() {
   // postData.append("myname=lk&mypwd=33");
 
   strTmp = "http://47.88.231.69/regist?c=" + c + "&p=" + p;
-  qDebug() << "==========regist url============" << endl << strTmp << endl;
+  std::cout << "==========regist url============" << endl
+            << strTmp.toStdString() << endl;
   this->hc->setURL(strTmp);
   this->hc->post(c);
 }

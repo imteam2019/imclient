@@ -1,15 +1,15 @@
 #include "friends.h"
 
-Friends::Friends()
-{
-    //从本地加载好友列表
-    this->plist=this->loadFriendFromLocal();
+Friends::Friends() {
+  //从本地加载好友列表
+  this->fmap = this->loadFriendFromLocal();
 }
 
-Friends::~Friends(){
-    //将好友信息存入本地
-    this->saveFriendtoLocal(this->plist);
-    this->plist->clear();
+Friends::~Friends() {
+  //将好友信息存入本地
+  this->saveFriendtoLocal(this->fmap);
+  this->fmap->clear();
+  delete this->fmap;
 }
 
 /**
@@ -18,70 +18,58 @@ Friends::~Friends(){
  * @return bool
  * @desc 将新的好友加入，若传入指针为空指针，则返回false；
  */
-bool Friends::add(Person *p){
-    if(!p) return false;
-    this->plist->append(*p);
-    return true;
+bool Friends::add(Person *p) {
+  if (!p) return false;
+  if (this->fmap == nullptr) this->fmap = new MAPFRIENDS();
+  this->fmap->at(p->getID()) = *p;
+  return true;
 }
-
 
 /**
  * @brief Friend::del
+ * 删除指定好友，如果当前好友列表中找不到，则返回空指针,若找到，则删除后返回原指针
  * @param p
  * @return Person *
- * @desc 删除指定好友，如果当前好友列表中找不到，则返回空指针,若找到，则删除后返回原指针
+ *
  */
-Person *Friends::del(Person *p){
-    bool b=this->plist->isEmpty();
-    if(b) return nullptr;
-    Person *d=new Person;
-    QMutableLinkedListIterator<Person> i(*this->plist);
-
-    while (i.hasNext()) {
-        d=&i.next();
-        if(QString::compare((p->getID()),(d->getID()))==0){
-            i.remove();
-            break;
-        }
-    }
-    return d;
+Person *Friends::del(Person *p) {
+  if (this->fmap->empty() || p == nullptr) return nullptr;
+  Person *d = new Person();
+  *d = this->fmap->at(p->getID());
+  this->fmap->erase(p->getID());
+  return d;
 }
 
 /**
  * @brief Friends::find
+ * 按id找到指定的好友对象，如果列表为空，或者id为空，则返回空指针，找不到好友也返回为空指针；
  * @param id
  * @return Person *
- * @desc 按id找到指定的好友对象，如果列表为空，或者id为空，则返回空指针，找不到好友也返回为空指针；
+ *
  */
-Person * Friends::find(QString id){
-    if(id.length()<=0 || this->plist->isEmpty()) return nullptr;
-    QMutableLinkedListIterator<Person> i(*this->plist);
-    Person *p=new Person;
-    while(i.hasNext()){
-        p=&i.next();
-        if(QString::compare((p->getID()),id)==0){
-            break;
-        }else
-            p=nullptr;
-    }
-    return p;
+Person *Friends::find(std::string id) {
+  if (id.length() <= 0 || this->fmap->empty()) return nullptr;
+  Person *p = new Person();
+  *p = this->fmap->at(id);
+  return p;
 }
 
-QLinkedList<Person> * Friends::loadFriendFromLocal(){
-    return nullptr;
+MAPFRIENDS *Friends::loadFriendFromLocal() {
+  // TODO
+  return nullptr;
 }
 
-QLinkedList<Person> * Friends::loadFriendFromRemote(){
-    return nullptr;
+MAPFRIENDS *Friends::loadFriendFromRemote() {
+  // TODO
+  return nullptr;
 }
 
-bool Friends::saveFriendtoLocal(QLinkedList<Person> *plist){
-    if(plist->isEmpty()) return false;
-    return true;
+bool Friends::saveFriendtoLocal(MAPFRIENDS *plist) {
+  if (plist->empty()) return false;
+  return true;
 }
 
-
-bool Friends::saveFriendtoRemote(QLinkedList<Person> *plist){
-    if(plist->isEmpty()) return false;
-    return true;
+bool Friends::saveFriendtoRemote(MAPFRIENDS *plist) {
+  if (plist->empty()) return false;
+  return true;
 }

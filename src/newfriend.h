@@ -16,25 +16,27 @@
 ****************************************************************************/
 #include <QDialog>
 #include <QtDebug>
+#include <iostream>
+
+using namespace std;
 
 namespace Ui {
 class NewFriend;
 }
 
-class NewFriend : public QDialog
-{
-    Q_OBJECT
+class NewFriend : public QDialog {
+  Q_OBJECT
 
-public:
-    explicit NewFriend(QWidget *parent = nullptr);
-    ~NewFriend();
+ public:
+  explicit NewFriend(QWidget *parent = nullptr);
+  ~NewFriend();
 
-private slots:
-    void on_btnAdd_clicked();
-    void on_btdEn_clicked();
+ private slots:
+  void on_btnAdd_clicked();
+  void on_btdEn_clicked();
 
-private:
-    Ui::NewFriend *ui;
+ private:
+  Ui::NewFriend *ui;
 };
 
-#endif // NEWFRIEND_H
+#endif  // NEWFRIEND_H

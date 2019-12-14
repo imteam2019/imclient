@@ -8,7 +8,7 @@ Encrypt::Encrypt() {}
  * @brief Encrypt::getRandKey 获取本地随机密钥字符串
  * @return
  */
-QString Encrypt::getRandKey() {
+std::string Encrypt::getRandKey() {
   // ASCII表中可显示字符的ascii值范围从32-126，其中包含数字、大写字母、小写字母和其他可显示字符（如：@#$%^&*:等）
   // 随机数字在以上范围选择即可
   char key[Encrypt::KEY_RAND_LENGTH + 1];
@@ -19,9 +19,11 @@ QString Encrypt::getRandKey() {
     key[i] = (qrand() % (126 - 32)) + 32;
   }
 
-  QString b = QString(key);
-  qDebug() << "=========getRandKey()===========" << endl;
-  qDebug() << "rand key lengh is :\t" << b.length() << endl << b << endl;
+  std::string b = std::string(key);
+#ifdef MY_DEBUG_ON
+  std::cout << "=========getRandKey()===========" << endl;
+  std::cout << "rand key lengh is :\t" << b.length() << endl << b << endl;
+#endif
 
   return b;
 }
@@ -49,8 +51,8 @@ QByteArray *Encrypt::encrypt(const QByteArray *byteMsg) {
  * 如入参为空指针或无数据，则返回空指针；
  * @desc 对QString类型的消息进行加密，纯文本类型；
  */
-QString *Encrypt::encrypt(const QString *strMsg) {
-  QString *enc = nullptr;
+std::string *Encrypt::encrypt(const std::string *strMsg) {
+  std::string *enc = nullptr;
   if (strMsg && strMsg->length() > 0) {
     // todo:此处new QString对象，分配给enc，并实现加密算法
     //可以转化后调用QByteArray * Encrypt::encrypt(const QByteArray *)
@@ -81,8 +83,8 @@ QByteArray *Encrypt::decrypt(const QByteArray *byteMsg) {
  * 如入参为空指针或无数据，则返回空指针；
  * @desc 对QString类型的消息进行加密，纯文本类型；
  */
-QString *Encrypt::decrypt(const QString *strMsg) {
-  QString *dec = nullptr;
+std::string *Encrypt::decrypt(const std::string *strMsg) {
+  std::string *dec = nullptr;
   if (strMsg && strMsg->length() > 0) {
     // todo:此处new QString对象，分配给enc，并实现解密算法
     //可以转化后调用QByteArray * Encrypt::decrypt(const QByteArray *)
@@ -90,23 +92,31 @@ QString *Encrypt::decrypt(const QString *strMsg) {
   return dec;
 }
 
-QString Encrypt::getMD5(QByteArray data) {
-  size_t length = (size_t)data.length();
-  if (0 == length) return "";
+/**
+ * @brief Encrypt::getMD5 计算md5哈希值，封装了OpenSSL的MD5算法
+ * @param data 待计算的数据
+ * @return 已计算的16字符哈希值字符串，如果原文长度为空，该值也为空
+ */
+std::string Encrypt::getMD5(std::string *data, unsigned int len) {
+  if (0 == len || data == nullptr) return "";
 
   MD5_CTX c;
   unsigned char md5[16];
 
   memset(md5, 0, sizeof(md5));
   MD5_Init(&c);
-  MD5_Update(&c, data.data(), length);
+  MD5_Update(&c, data->c_str(), len);
   MD5_Final(md5, &c);
-  QByteArray *s = new QByteArray((char *)md5, 16);
-  // qDebug() << s->toHex();
-
-  return QString(*s);
+  std::string *s = new std::string((char *)md5, 16);
+  return *s;
 }
 
+/**
+ * @brief Encrypt::getRSAEncrypt
+ * 封装OpenSSl的RSA加密算法，为避免修改原始明文，加密之前创建本地副本，同时缓冲区长度+1
+ * @param data 待加密的数据
+ * @return QByteArray * 密文数据的缓冲区指针，出错则为空指针
+ */
 QByteArray *Encrypt::getRSAEncrypt(QByteArray data) {
   unsigned char *bufPlain;
   unsigned char *bufEncrypt;
@@ -136,9 +146,8 @@ QByteArray *Encrypt::getRSAEncrypt(QByteArray data) {
         RSA_public_encrypt(clen, bufPlain + 117 * i, bufEncrypt + lenRSA * i,
                            this->rsa, RSA_PKCS1_PADDING);
   }
-  // lenEncryped = RSA_public_encrypt(strlen((char *)bufPlain), bufPlain,
-  //                                 bufEncrypt, this->rsa, RSA_PKCS1_PADDING);
 
+  // 出错的处理
   if (lenEncryped < 0) {
     //加载错误信息
     ERR_load_ERR_strings();
@@ -149,51 +158,26 @@ QByteArray *Encrypt::getRSAEncrypt(QByteArray data) {
     char *pTmp = nullptr;
     // 格式：error:errId:库:函数:原因
     pTmp = ERR_error_string(ulErr, szErrMsg);
-    qDebug() << "error is :" << endl << pTmp << endl;
-    qDebug() << "data is : " << endl << data.data() << endl;
+#ifdef MY_DEBUG_ON
+    std::cout << "error is :" << endl << pTmp << endl;
+    std::cout << "data is : " << endl << data.data() << endl;
+#endif
     return nullptr;
   }
-  /*
-    qDebug() << "=============getRSAEncrypt==========" << endl;
-    qDebug() << "before encryption:" << endl << data.data() << endl;
-    qDebug() << "after encryption:" << endl;
-    for (int i = 0; i < lenEncryped; i++) {
-      printf("%02X", bufEncrypt[i]);
-    }
-    printf("\n\n");
-  */
+
   QByteArray *b = new QByteArray((char *)bufEncrypt, lenRSA * slic);
-  // return b;
-  /*
-    unsigned char *buf;
-    buf = (unsigned char *)malloc(lenPlain + 1);
-    memset(buf, '\0', lenPlain + 1);
-    int bufl = 0;
-    for (size_t i = 0; i < slic; i++) {
-      int j = RSA_private_decrypt(128, bufEncrypt + (i * 128), buf + (i * 117),
-                                  this->rsa, RSA_PKCS1_PADDING);
-      //    qDebug() << "j :\t" << j << endl;
-      bufl += j;
-    }
-    // int j = RSA_private_decrypt(lenEncryped, bufEncrypt, buf, this->rsa,
-    //                            RSA_PKCS1_PADDING);
-    printf("\n=======print decrypt info========\n");
-    //  qDebug() << "\n bufl = " << bufl << endl;
-    for (int i = 0; i <= bufl; i++) {
-      printf("%c", buf[i]);
-    }
-    printf("\n");
-  */
-  // QByteArray *b = new QByteArray((char *)buf, bufl);
+
   return b;
 }
+
 /**
- * @brief Encrypt::getRSA 按照指定的公钥字符串，对数据进行RSA加密
+ * @brief Encrypt::getRSA
+ * 按照指定的公钥字符串，对数据进行RSA加密，解决了明文长度超过117的问题。
  * @param data 待加密的明文内容
  * @param strPublicKey 用于加密的公钥
  * @return 返回包含密文的QByteArray指针，如果出错则为空指针
  */
-QByteArray *Encrypt::getRSAEncrypt(QByteArray data, QString strPublicKey) {
+QByteArray *Encrypt::getRSAEncrypt(QByteArray data, std::string strPublicKey) {
   RSA *rsa = nullptr;
   BIO *bioPK = nullptr;
   unsigned char *bufEncrypt = nullptr;
@@ -204,11 +188,11 @@ QByteArray *Encrypt::getRSAEncrypt(QByteArray data, QString strPublicKey) {
     return nullptr;
   }
 
-  qDebug() << strPublicKey << endl;
+  std::cout << strPublicKey << endl;
   //读取公钥,生成RSA结构体
-  bioPK = BIO_new_mem_buf(strPublicKey.toLocal8Bit().data(), -1);
+  bioPK = BIO_new_mem_buf(strPublicKey.c_str(), strPublicKey.size());
   if (bioPK == nullptr) {
-    qDebug() << "Failed to read Public Key from: \n" + strPublicKey << endl;
+    std::cout << "Failed to read Public Key from: \n" + strPublicKey << endl;
     return nullptr;
   }
 
@@ -229,7 +213,7 @@ QByteArray *Encrypt::getRSAEncrypt(QByteArray data, QString strPublicKey) {
   if (lenEncryped < 0) return nullptr;
 
   QByteArray *b = new QByteArray((char *)bufEncrypt, lenEncryped);
-  qDebug() << b->toHex() << endl;
+  std::cout << b->toHex().data() << endl;
   return b;
 }
 
@@ -277,11 +261,13 @@ QByteArray *Encrypt::getRSADecrypt(QByteArray data) {
                             bufPlain + (i * 117), this->rsa, RSA_PKCS1_PADDING);
   }
 
+#ifdef MY_DEBUG_ON
   // 逐字输出解密缓冲区内的数据
   for (size_t i = 0; i <= lenPlain; i++) {
     printf("%c", bufPlain[i]);
   }
   printf("\n");
+#endif
 
   QByteArray *b = new QByteArray((char *)bufPlain, (int)lenPlain);
   return b;
@@ -302,50 +288,19 @@ int Encrypt::generateRSAKey() {
   return 0;
 }
 
-int Encrypt::test(int intBitLength) {
-  RSA *rsa = RSA_new();
-  int ret = 0;
-  BIGNUM *bne = BN_new();
-  ret = BN_set_word(bne, RSA_F4);
-  ret = RSA_generate_key_ex(rsa, 1024, bne, nullptr);
-
-  unsigned char bufPlain[1024] = {0};
-  //"Returns the attribute associated with the code code.";
-  QString s = Encrypt::getRandKey();
-  memcpy(bufPlain, s.toLocal8Bit(), s.toLocal8Bit().length());
-  unsigned char bufEncrypt[1024] = {0};
-  unsigned char bufDecrypt[1024] = {0};
-  int outl = 1024;
-  int outl2;
-  int j = (int)strlen((char *)bufPlain);
-  printf("%s\n", bufPlain);
-  for (size_t i = 0; i < j; i++) {
-    printf("%02x ", bufPlain[i]);
-  }
-  printf("\n---------------\n");
-
-  RSA *rpub = RSAPublicKey_dup(rsa);
-  RSA *rpri = RSAPrivateKey_dup(rsa);
-
-  outl = RSA_public_encrypt(strlen((char *)bufPlain), bufPlain, bufEncrypt,
-                            rpub, RSA_PKCS1_OAEP_PADDING);
-  for (int i = 0; i < outl; i++) {
-    printf("%02x ", bufEncrypt[i]);
-    if ((i + 1) % 10 == 0) printf("\n");
-  }
-  printf("\n");
-  outl2 = RSA_private_decrypt(outl, bufEncrypt, bufDecrypt, rpri,
-                              RSA_PKCS1_OAEP_PADDING);
-  printf("-----------------\n%s\n", bufDecrypt);
-  for (int i = 0; i < outl2; i++) {
-    printf("%02x ", bufDecrypt[i]);
-  }
-  printf("\n");
-  RSA_free(rsa);
-  return 0;
-}
-
-QByteArray *Encrypt::getAESEncrypt(QByteArray data, QString strKey,
+/**
+ * @brief Encrypt::getAESEncrypt
+ * 封装OpenSSL的AES加密算法，用给定密钥对明文进行AES加密（CRC模式），返回密文。为避免对原文数据的误操作，将明文创建本地副本。
+ * 两个检查条件：
+ *  1. 待加密数据不能为空；
+ *  2. 密钥长度必须是16的整数倍
+ * @param data 待加密的明文
+ * @param strKey 加密密钥
+ * @param intMode 预留
+ * @return
+ * 返回已加密的密文QByteArray对象指针，如果数据为空，或者加密Key不为16的整数倍，则返回空指针。
+ */
+QByteArray *Encrypt::getAESEncrypt(QByteArray data, std::string strKey,
                                    int intMode = 0) {
   // 检查入参，如果数据为空，或者加密Key不为16的整数倍，则返回空指针
   // TODO 考虑到性能，此处应该对key的最大长度作出限制，具体限制长度后续再定
@@ -359,7 +314,6 @@ QByteArray *Encrypt::getAESEncrypt(QByteArray data, QString strKey,
   unsigned char iv[AES_BLOCK_SIZE];  // init vector
   unsigned char *bufPlain = nullptr;
   unsigned char *bufEncrypt = nullptr;
-  unsigned char *bufDecrypt = nullptr;
   size_t len;  // encrypt length (in multiple of AES_BLOCK_SIZE)
   size_t lenPlain = (size_t)data.length();
   size_t i, lenKey = (size_t)strKey.length();
@@ -375,7 +329,7 @@ QByteArray *Encrypt::getAESEncrypt(QByteArray data, QString strKey,
   // set the input string
   bufPlain = (unsigned char *)malloc(len);
   if (bufPlain == nullptr) {
-    qDebug() << "Unable to allocate memory for bufPlain." << endl;
+    std::cout << "Unable to allocate memory for bufPlain." << endl;
     return nullptr;
   }
   memset(bufPlain, '\0', len);
@@ -384,82 +338,48 @@ QByteArray *Encrypt::getAESEncrypt(QByteArray data, QString strKey,
   // 设置key
   key = (unsigned char *)malloc(lenKey);
   memset(key, '\0', lenKey);
-  memcpy(key, strKey.toLocal8Bit(), lenKey);
+  memcpy(key, strKey.c_str(), lenKey);
 
   // Set encryption key
   for (i = 0; i < AES_BLOCK_SIZE; ++i) {
     iv[i] = 0;
   }
   if (AES_set_encrypt_key(key, (int)lenKey * 8, &aes) < 0) {
-    qDebug() << "Unable to set encryption key in AES\n" << endl;
+    std::cout << "Unable to set encryption key in AES\n" << endl;
     return nullptr;
   }
 
   // alloc encrypt_string
   bufEncrypt = (unsigned char *)malloc(len);
   if (bufEncrypt == nullptr) {
-    qDebug() << "Unable to allocate memory for encrypt_string\n" << endl;
+    std::cout << "Unable to allocate memory for encrypt_string\n" << endl;
     return nullptr;
   }
   memset(bufEncrypt, '\0', len);
 
   // encrypt (iv will change)
   AES_cbc_encrypt(bufPlain, bufEncrypt, len, &aes, iv, AES_ENCRYPT);
-  /*
-  qDebug() << "=============getAESEncrypt==========" << endl;
-  qDebug() << "before encryption:" << endl << data.data() << endl;
-  qDebug() << "after encryption:" << endl;
 
-  printf("AES encrypted string = ");
-  for (i = 0; i < len; ++i) {
-    printf("%x%x", (bufEncrypt[i] >> 4) & 0xf, bufEncrypt[i] & 0xf);
-  }
-
-  printf("\n");
-/*
   QByteArray *e = new QByteArray((char *)bufEncrypt, len);
 
   return e;
-
-  /*
-  // alloc decrypt_string
-  bufDecrypt = (unsigned char *)malloc(len);
-  if (bufDecrypt == nullptr) {
-    qDebug() << "Unable to allocate memory for decrypt_string\n" << endl;
-    return nullptr;
-  }
-
-  // Set decryption key
-  for (i = 0; i < AES_BLOCK_SIZE; ++i) {
-    iv[i] = 0;
-  }
-  if (AES_set_decrypt_key(key, (int)lenKey * 8, &aes) < 0) {
-    qDebug() << "Unable to set decryption key in AES\n" << endl;
-    return nullptr;
-  }
-
-  // decrypt
-  AES_cbc_encrypt(bufEncrypt, bufDecrypt, len, &aes, iv, AES_DECRYPT);
-
-  printf("encrypted string = ");
-  for (i = 0; i < len; ++i) {
-    printf("%x%x", (bufEncrypt[i] >> 4) & 0xf, bufEncrypt[i] & 0xf);
-  }
-
-  printf("\n");
-  printf("decrypted string = ");
-  for (i = 0; i < len; ++i) {
-    printf("%c", bufDecrypt[i]);
-  }
-  printf("\n");
-
-  return nullptr;
-  */
 }
 
-QByteArray *Encrypt::getAESDecrypt(QByteArray data, QString strKey,
+/**
+ * @brief Encrypt::getAESDecrypt
+ * 封装OpenSSL的AES解密算法，用给定密钥对密文进行AES解密（CRC模式），返回明文。为避免对原文数据的误操作，将密文创建本地副本。
+ * 两个检查条件：
+ *  1. 密文数据不能为空；
+ *  2. 密钥长度必须是16的整数倍
+ * @param data 密文QByteArray对象。
+ * @param strKey 解密密钥
+ * @param intMode 预留
+ * @return
+ * 返回已加密的密文QByteArray对象指针，如果数据为空，或者加密Key不为16的整数倍，则返回空指针。
+ */
+QByteArray *Encrypt::getAESDecrypt(QByteArray data, std::string strKey,
                                    int intMode) {
-  // 检查入参，如果数据为空，或者加密Key不为16的整数倍，则返回空指针
+  // 检查入参，如果数据为空，或者解密Key不为16的整数倍，则返回空指针
   // TODO 考虑到性能，此处应该对key的最大长度作出限制，具体限制长度后续再定
   if (data.length() <= 0) return nullptr;
   if (0 == strKey.length() || strKey.length() % AES_BLOCK_SIZE != 0)
@@ -478,7 +398,7 @@ QByteArray *Encrypt::getAESDecrypt(QByteArray data, QString strKey,
   // 设置密文缓冲区，并创建副本
   bufEncrypt = (unsigned char *)malloc(lenEncrypt + 1);
   if (bufEncrypt == nullptr) {
-    qDebug() << "Unable to allocate memory for bufEncrypt." << endl;
+    std::cout << "Unable to allocate memory for bufEncrypt." << endl;
     return nullptr;
   }
   memset(bufEncrypt, '\0', lenEncrypt + 1);
@@ -487,7 +407,7 @@ QByteArray *Encrypt::getAESDecrypt(QByteArray data, QString strKey,
   // 设置明文缓冲区，为确保数据完整，长度为密文长度+1
   bufDecrypt = (unsigned char *)malloc(lenEncrypt + 1);
   if (bufEncrypt == nullptr) {
-    qDebug() << "Unable to allocate memory for bufEncrypt." << endl;
+    std::cout << "Unable to allocate memory for bufEncrypt." << endl;
     return nullptr;
   }
   memset(bufDecrypt, '\0', lenEncrypt + 1);
@@ -495,26 +415,70 @@ QByteArray *Encrypt::getAESDecrypt(QByteArray data, QString strKey,
   // 设置key
   key = (unsigned char *)malloc(lenKey);
   memset(key, '\0', lenKey);
-  memcpy(key, strKey.toLocal8Bit(), lenKey);
+  memcpy(key, strKey.c_str(), lenKey);
 
   // 初始化iv,并根据密钥初始化aes
   for (i = 0; i < AES_BLOCK_SIZE; ++i) {
     iv[i] = 0;
   }
   if (AES_set_decrypt_key(key, (int)lenKey * 8, &aes) < 0) {
-    qDebug() << "Unable to set decryption key in AES\n" << endl;
+    std::cout << "Unable to set decryption key in AES\n" << endl;
     return nullptr;
   }
 
   // decrypt
   AES_cbc_encrypt(bufEncrypt, bufDecrypt, lenEncrypt, &aes, iv, AES_DECRYPT);
+  QByteArray *e = new QByteArray((char *)bufDecrypt, lenEncrypt);
 
-  /*
-  printf("decrypted string = ");
-  for (i = 0; i < lenEncrypt; ++i) {
-    printf("%c", bufDecrypt[i]);
+  return e;
+}
+
+/**
+ * @brief Encrypt::getBase64Encode
+ * @param buffer
+ * @param length
+ * @param newLine
+ * @return
+ */
+std::string *Encrypt::getBase64Encode(const char *buffer, long long length,
+                                      bool newLine) {
+  if (buffer == nullptr || length <= 0) return nullptr;
+
+  BIO *bmem = nullptr;
+  BIO *b64 = nullptr;
+  BUF_MEM *bptr;
+
+  b64 = BIO_new(BIO_f_base64());
+  if (!newLine) {
+    BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
   }
-  printf("\n");
-*/
-  return nullptr;
+  bmem = BIO_new(BIO_s_mem());
+  b64 = BIO_push(b64, bmem);
+  BIO_write(b64, buffer, length);
+  BIO_flush(b64);
+  BIO_get_mem_ptr(b64, &bptr);
+  BIO_set_close(b64, BIO_NOCLOSE);
+
+  char *buff = (char *)malloc(bptr->length + 1);
+  memcpy(buff, bptr->data, bptr->length);
+  buff[bptr->length] = 0;
+  BIO_free_all(b64);
+  return new std::string(buff, bptr->length + 1);
+}
+
+std::string *Encrypt::getBase64Decode(const char *input, long long length,
+                                      bool newLine) {
+  BIO *b64 = nullptr;
+  BIO *bmem = nullptr;
+  char *buffer = (char *)malloc(length);
+  memset(buffer, 0, length);
+  b64 = BIO_new(BIO_f_base64());
+  if (!newLine) {
+    BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+  }
+  bmem = BIO_new_mem_buf(input, length);
+  bmem = BIO_push(b64, bmem);
+  BIO_read(bmem, buffer, length);
+  BIO_free_all(bmem);
+  return new std::string(buffer, length);
 }

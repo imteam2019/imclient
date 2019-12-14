@@ -13,20 +13,28 @@
 **
 **
 ****************************************************************************/
-#include <QtGlobal>
-#include <QVariant>
 #include <QDebug>
-class Data
-{
-public:
-    Data();
-    enum enumType {JSON,XML};
-    static QString format(QMap<QString,QVariant> *data,int formatName);
-    static void testJson();
+#include <QVariant>
+#include <QtGlobal>
+#include <iostream>
 
-private:
-    static QString formatAsJson(QMap<QString,QVariant> *data,int formatName);
-    static QString formatAsXml(QMap<QString,QVariant> *data,int formatName);
+#include "common/rapidjson/document.h"
+#include "common/rapidjson/filereadstream.h"
+#include "common/rapidjson/filewritestream.h"
+#include "common/rapidjson/prettywriter.h"
+#include "common/rapidjson/stringbuffer.h"
+
+using namespace std;
+class Data {
+ public:
+  Data();
+  enum enumType { JSON, XML };
+  static QString format(QMap<QString, QVariant> *data, int formatName);
+  static void testJson();
+
+ private:
+  static QString formatAsJson(QMap<QString, QVariant> *data, int formatName);
+  static QString formatAsXml(QMap<QString, QVariant> *data, int formatName);
 };
 
-#endif // DATA_H
+#endif  // DATA_H

@@ -22,38 +22,38 @@ QVariantMap * SettingsHandle::loadSettings(const QString *fileName, int filetype
     if(!fileName || fileName->length()<=0)
         return nullptr;
     if(filetype!=SettingsHandle::XML && filetype!=SettingsHandle::JSON){
-        qDebug()<<"Error:filetype is not be support.\n"<<endl;
+        std::cout<<"Error:filetype is not be support.\n"<<endl;
         return nullptr;
     }
     QFile file(*fileName);
     if(!file.exists()){
-        qDebug()<<"Error:Not found the settings file.\n"<<endl;
+        std::cout<<"Error:Not found the settings file.\n"<<endl;
         return nullptr;
     }
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug()<<"Can't open the file!"<<endl;
+        std::cout<<"Can't open the file!"<<endl;
         return nullptr;
     }
 
 
     //读取文件
     QString *data=new QString();
-    //qDebug()<<"file size:"<<this->sg->readAll()<<endl;
+    //std::cout<<"file size:"<<this->sg->readAll()<<endl;
     //判断文件是否已经读到末尾了
     while(!file.atEnd()){
         char buffer[1024];
         //读取一行数据
-        qint64 length = file.readLine(buffer,1024);
+        long long length = file.readLine(buffer,1024);
         if(length != -1){
-            qDebug()<<buffer;
+            std::cout<<buffer;
             data->append(buffer);
         }
     }
 
     if(data->length()<=0){
-        qDebug()<<"the settings file has nothing.\n"<<endl;
+        std::cout<<"the settings file has nothing.\n"<<endl;
         return nullptr;
     }
 

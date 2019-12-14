@@ -13,90 +13,78 @@
 **
 **
 ****************************************************************************/
-#include <QDataStream>
-#include <QDateTime>
-#include <QDebug>
-#include <QHostAddress>
-#include <QtGlobal>
+#include <QObject>
+#include <chrono>
+#include <iostream>
+#include <map>
+#include <ostream>
 
-struct MSGHeader {
-  qint64 msgHeaderLength;  //消息头长度
-  qint64 msgBodyLength;    //消息体长度
-  char senderID[1024];     //发送方ID；
-  char receiverID[1024];   //接收方ID;
-  qint64 sendTimeStamp;    //消息发送时间，自Epoch（1970-01-01 00:00:00
-                           // UTC）起经过的时间，以秒为单位
-  qint64 status;           //消息当前状态
-  qint64
-      sendCount;  // 消息发送次数计数，默认值为
-                  // TCPConn::RESEND_TIMES定义，每发送一次该值减1，当为0时抛弃不再发送
-  qint64 msgType;  //消息类型，在线消息：0，离线消息：1
+using namespace std;
+
+struct M {
+  std::string session = "00000000000000000000000000000000";
+  unsigned int is_group_msg = 0;  //  是否是群消息, 0:非群发消息，1:群发消息
+  unsigned int from_user = 0;  //  如果是群消息from_user就是发送
+  unsigned int to_user =
+      0;  // 如果是群消息就是目标群的group_id，如果不是群消息就是目标用户的user_id
+  unsigned int msg_id = 0;
+  std::string msg_type = "";
+  std::string msg_content = "";
+  long long msg_time = 0;
+  std::string device = "";
+  std::string target_device = "mobile";
+  unsigned int target_user = 0;
+  unsigned int global_id = 0;   //消息的全局ID
+  std::string version = "";     //消息版本号
+  unsigned int group_id = 0;    //群id
+  std::string gate_no = "";     // 消息节点名字
+  unsigned int is_disturb = 1;  //本次消息是否推送 0推动， 1不推送
 };
 
-struct MSGBody {
-  QByteArray msgContent;
-};
-
-struct MSG {
-  MSGHeader header;
-  MSGBody body;
+// 消息摘要，用于保存对应消息的处理、状态等信息
+struct MSGSummary {
+  std::string session = "00000000000000000000000000000000";
+  unsigned int is_group_msg = 0;  //  是否是群消息, 0:非群发消息，1:群发消息
+  unsigned int from_user = 0;  //  如果是群消息from_user就是发送
+  unsigned int to_user =
+      0;  // 如果是群消息就是目标群的group_id，如果不是群消息就是目标用户的user_id
+  unsigned int msg_id = 0;
+  unsigned int msg_length =
+      0;  //消息最终长度，如果有编码或加密，则为编码或加密后的长度
+  std::string hash;  //消息的哈希值
+  unsigned int sendCount =
+      3;  //消息最大发送次数，每发送一次减1，当该值为0则丢弃
+  unsigned int msgStatus;  //消息实时状态，由Message enum MsgStatus 定义
 };
 
 class Message : public QObject {
  public:
-  // static const MSG_BODY_LENGTH_MAX=
-  enum MsgStatus {          //定义消息生命周期的各种状态
-    MSG_STATUS_READY = 0,   //新消息，已经准备好待发送
-    MSG_STATUS_SENDED = 1,  //消息已经发送，接收方是否已处理未知
-    MSG_STATUS_RECIVED = 2,  //消息已由接收方处理完毕
-    MSG_STATUS_FAILED = 3    //消息发送失败，并已超过重发限制
-  };
   Message();
   Message(const Message &m);
+  Message(unsigned int is_group_msg, unsigned int from_user,
+          unsigned int to_user, std::string msg_content);
   ~Message();
 
   Message &operator=(const Message &m);
   bool operator==(const Message &m);
 
-  qint64 getMsgSize();
-  qint64 getMsgHeaderSize();
-  qint64 getMsgBodySize();
+  unsigned long getMsgSize();
+  unsigned long getMsgBodySize();
 
-  MSGHeader *getMsgHeader();
-  MSGBody *getMsgBody();
-  MSG *getMsg();
-
-  void setSenderID(char *strSenderID, int len);
-  void setReciverID(char *strReciverID, int len);
-  void setMsgContent(QByteArray *msgContent);
-
-  friend bool operator>(const Message &m1, const Message &m2);
-  friend bool operator<(const Message &m1, const Message &m2);
-  friend bool operator>=(const Message &m1, const Message &m2);
-  friend bool operator<=(const Message &m1, const Message &m2);
-  friend bool operator!=(const Message &m1, const Message &m2);
+  std::string *toJSON();
+  MSGSummary *getMessageSummary();
+  void setMessageSummary(MSGSummary *ptrSummary);
 
   //友元声明，流插入运算符和流提取运算符函数
-  friend QDataStream &operator<<(QDataStream &out, Message &m);
-  friend QDataStream &operator>>(QDataStream &in, Message &m);
+  friend std::ostream &operator<<(std::ostream &out, Message &m);
+  friend std::istream &operator>>(std::istream &in, Message &m);
 
  private:
-  MSGHeader *mh;  //消息头指针
-  MSGBody *mb;    //消息体指针
-  MSG *msg;       //消息指针
+  friend class MSGHandle;
+  M *msg;                  //消息指针
+  MSGSummary *msgSummary;  //消息摘要指针
 
   void init();
-  MSGHeader *msgHeaderCopy(MSGHeader &d);
 };
-/*
-//自身声明，小于号函数必须用两个参数的全局函数
-bool operator<(const Message &m1, const Message &m2);
 
-//自身声明，流插入运算符和流提取运算符函数
-QDataStream &operator<<(QDataStream &out, const Message &m);
-QDataStream &operator>>(QDataStream &in, Message &m);
-
-QDataStream &operator<<(QDataStream &out, const MSGHeader &h);
-QDataStream &operator>>(QDataStream &in, MSGHeader &h);
-*/
 #endif  // MESSAGE_H

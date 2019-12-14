@@ -1,23 +1,29 @@
 #ifndef IMTEXTEDIT_H
 #define IMTEXTEDIT_H
 
-#include <QObject>
-#include <QWidget>
-#include <QTextEdit>
-#include <QMimeData>
+#include <QBuffer>
 #include <QFileInfo>
+#include <QImage>
 #include <QImageReader>
+#include <QMimeData>
+#include <QObject>
+#include <QTextEdit>
+#include <QVariant>
+#include <QWidget>
 #include <QtDebug>
+#include <iostream>
 
-class IMTextEdit : public QTextEdit
-{
-public:
-    IMTextEdit();
-    bool canInsertFromMimeData(const QMimeData* source) const;
-    void insertFromMimeData(const QMimeData* source);
+#include "common/encrypt.h"
 
-private:
-    void dropImage(const QUrl& url, const QImage& image);
-    void dropTextFile(const QUrl& url);
+using namespace std;
+class IMTextEdit : public QTextEdit {
+ public:
+  IMTextEdit();
+  bool canInsertFromMimeData(const QMimeData* source) const;
+  void insertFromMimeData(const QMimeData* source);
+
+ private:
+  void dropImage(const QUrl& url, const QImage& image);
+  void dropTextFile(const QUrl& url);
 };
-#endif // IMTEXTEDIT_H
+#endif  // IMTEXTEDIT_H

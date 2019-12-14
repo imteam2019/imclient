@@ -22,9 +22,6 @@ bool HTTPConn::get() {
   this->request = new QNetworkRequest(*this->qUrl);
   this->qr = this->manager->get(*this->request);
 
-  // printf("\n===========get()===============\n");
-  // this->printRequestHeasers(this->request);
-
   if (this->qr != nullptr) {
     return true;
   } else {
@@ -56,13 +53,13 @@ bool HTTPConn::post(QString strData) {
   this->request->setRawHeader("Cache-Control", "no-cache");
 
   this->request->setRawHeader("Content-Type", "application/json");
-
+#ifdef MY_DEBUG_ON
   printf("\n===========Post()===============\n");
   this->printRequestHeasers(this->request);
   this->qr = this->manager->post(*this->request, strData.toUtf8());
   printf("\n===========end Post()===============\n");
   // this->printRequestHeasers(this->request);
-
+#endif
   if (this->qr != nullptr) {
     // this->qr->res
     return true;
@@ -108,7 +105,9 @@ void HTTPConn::getData(PFUNC pfun, int rePlyFlag, QString strData,
  * @param reply QNetworkReply指针
  */
 void HTTPConn::replyFinished(QNetworkReply *reply) {
+#ifdef MY_DEBUG_ON
   this->printResponseHeaders(reply);
+#endif
   QTextCodec *codec = QTextCodec::codecForName("utf8");
   QString all;
   int intHttpStatusCode =
@@ -119,16 +118,16 @@ void HTTPConn::replyFinished(QNetworkReply *reply) {
   if (reply->error()) {
     all = reply->errorString();
     this->getData(this->pf, HTTPConn::RESP_FAILED, all, this->pUesr);
-    qDebug() << all << endl;
+    std::cout << all.toStdString() << endl;
   }
   if (intHttpStatusCode == HTTPConn::HttpResponseStatus::HTTPStatusOK) {
     all = codec->toUnicode(reply->readAll());
     this->getData(this->pf, intHttpStatusCode, all, this->pUesr);
-    qDebug() << all << endl;
+    std::cout << all.toStdString() << endl;
   } else {
     this->getData(this->pf, intHttpStatusCode, strHttpStatusMessage,
                   this->pUesr);
-    qDebug() << strHttpStatusMessage << endl;
+    std::cout << strHttpStatusMessage.toStdString() << endl;
   }
 
   reply->deleteLater();
@@ -140,12 +139,13 @@ void HTTPConn::replyFinished(QNetworkReply *reply) {
  */
 void HTTPConn::printRequestHeasers(QNetworkRequest *request) {
   QList<QByteArray> s = request->rawHeaderList();
-  qDebug() << "============Print Request Headers Info==========" << endl;
-  qDebug() << this->qUrl->toString() << endl;
+  std::cout << "============Print Request Headers Info==========" << endl;
+  std::cout << this->qUrl->toString().toStdString() << endl;
   for (int i = 0; i < s.size(); i++) {
-    qDebug() << s.at(i) << ":\t" << request->rawHeader(s.at(i)) << endl;
+    std::cout << s.at(i).toStdString() << ":\t"
+              << request->rawHeader(s.at(i)).toStdString() << endl;
   }
-  qDebug() << "============End Request Headers Info==========" << endl;
+  std::cout << "============End Request Headers Info==========" << endl;
 }
 
 /**
@@ -154,12 +154,14 @@ void HTTPConn::printRequestHeasers(QNetworkRequest *request) {
  */
 void HTTPConn::printResponseHeaders(QNetworkReply *reply) {
   QList<QByteArray> s = reply->rawHeaderList();
-  qDebug() << "============Print Response Headers Info==========" << endl;
-  // qDebug()<<this->qUrl->toString()<<endl;
+  std::cout << "============Print Response Headers Info==========" << endl;
+  // std::cout<<this->qUrl->toString()<<endl;
   for (int i = 0; i < s.size(); i++) {
-    qDebug() << s.at(i) << ":\t" << reply->rawHeader(s.at(i)) << endl;
+    std::cout << s.at(i).toStdString() << ":\t"
+              << reply->rawHeader(s.at(i)).toStdString() << endl;
   }
-  qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()
-           << endl;
-  qDebug() << "============End Response Headers Info==========" << endl;
+  std::cout
+      << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()
+      << endl;
+  std::cout << "============End Response Headers Info==========" << endl;
 }

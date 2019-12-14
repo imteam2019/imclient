@@ -13,29 +13,29 @@
 **
 **
 ****************************************************************************/
-#include <QtGlobal>
-class Person
-{
-public:
-    enum enumType{online,offline,invisible,away};
-    Person();
-    ~Person();
-    Person(const Person& person);
-    Person & operator =(const Person& person);
-    bool operator ==(const Person& person);
-    QString getID();
-    void setID(QString id);
-    QString getNickName();
-    void setNickName(QString strNickName);
-    QString getSign();
-    void setSign(QString strSign);
-    int getStatus();
-    void setStatus(int);
-private:
-    QString *strNickName;//昵称
-    QString *strID;//唯一识别号
-    QString *strSign;//签名
-    int intStatus;//状态
+#include <string>
+class Person {
+ public:
+  enum enumType { online, offline, invisible, away };
+  Person();
+  ~Person();
+  Person(const Person& person);
+  Person& operator=(const Person& person);
+  bool operator==(const Person& person);
+  std::string getID();
+  void setID(std::string id);
+  std::string getNickName();
+  void setNickName(std::string strNickName);
+  std::string getSign();
+  void setSign(std::string strSign);
+  int getStatus();
+  void setStatus(int);
+
+ private:
+  std::string* strNickName;  //昵称
+  std::string* strID;        //唯一识别号
+  std::string* strSign;      //签名
+  int intStatus;             //状态
 };
 
-#endif // PERSON_H
+#endif  // PERSON_H

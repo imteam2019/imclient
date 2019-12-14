@@ -20,6 +20,9 @@
 #include <QTextCodec>
 #include <QUrl>
 #include <QtNetwork>
+#include <iostream>
+
+using namespace std;
 
 typedef void (*PFUNC)(QString reply, int replyFlag, void *pObject);
 

@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
   this->teMessage->setDisabled(false);
   this->teMessage->setHidden(false);
   this->teMessage->setReadOnly(false);
+  this->teMessage->setAutoFormatting(QTextEdit::AutoAll);
 
   /////////////
   /***
@@ -32,13 +33,13 @@ MainWindow::MainWindow(QWidget *parent)
   //遍历frame
   for(auto block = rFrame->begin();!block.atEnd();++block) {
       if(block.currentBlock().isValid()) {
-          qDebug()<<block.currentBlock().text();
+          std::cout<<block.currentBlock().text();
       }
       else if(block.currentFrame()) {//frame嵌套，范例只有两层所以不递归了
           auto child_frame = block.currentFrame();
           for(auto block2 = child_frame->begin();!block2.atEnd();++block2) {
               if(block.currentBlock().isValid()) {
-                  qDebug()<<block2.currentBlock().text();
+                  std::cout<<block2.currentBlock().text();
               }
           }
       }
@@ -48,13 +49,14 @@ MainWindow::MainWindow(QWidget *parent)
   //遍历文本块
   QTextBlock block = ui->tbList->document()->firstBlock();
   for (int i = 0; i < ui->tbList->document()->blockCount(); i++) {
-    qDebug() << QString(
-                    "block num:%1\t block first line number:%2\tblock "
-                    "length:%3\t text:")
-                    .arg(i)
-                    .arg(block.firstLineNumber())
-                    .arg(block.length())
-             << block.text();
+    /* std::cout << QString(
+                     "block num:%1\t block first line number:%2\tblock "
+                     "length:%3\t text:")
+                     .arg(i)
+                     .arg(block.firstLineNumber())
+                     .arg(block.length())
+              << block.text();
+ */
     block = block.next();
   }
 
@@ -75,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
 */
 
   this->tc = new TCPConn();
+  this->msgHandle = new MSGHandle();
 }
 
 MainWindow::~MainWindow() {
@@ -82,6 +85,17 @@ MainWindow::~MainWindow() {
   delete this->tc;
 }
 
+void MainWindow::registCallBack() {
+  this->tc->registCallback(MSGHandle::newArrivalFromNW, this->msgHandle);
+  this->msgHandle->registCallbackPFUNC_NewSendToUI(newArrival, this);
+}
+
+void MainWindow::newArrival(unsigned int is_group_msg, unsigned int from_user,
+                            unsigned int to_user, std::string msg_content,
+                            void *pObject) {
+  // TODO 新到达消息展现处理
+  return;
+}
 /**
  * @brief MainWindow::setMsgStyle
  * @return
@@ -125,16 +139,14 @@ bool MainWindow::setMsgStyle() {
 }
 
 void MainWindow::on_btnSendMsg_clicked() {
-  QString strMsg;
+  std::string strMsg;
   Person *p = new Person;
 
   p->setID("hhww");
-  strMsg =
-      p->getID() + ":\n" +
-      this->teMessage->toHtml();  //.replace(QString("\\\""), QString("\""));
+  strMsg = p->getID() + ":\n" + this->teMessage->toHtml().toStdString();
   QTextDocument *myMsg = this->teMessage->document();
 
-  // qDebug() << this->teMessage->toHtml() << endl;
+  // std::cout << this->teMessage->toHtml() << endl;
   QTextDocument *doc = ui->tbList->document();
   QTextBlock insert_block = doc->lastBlock().next();
   QTextCursor cur = ui->tbList->textCursor();
@@ -143,21 +155,12 @@ void MainWindow::on_btnSendMsg_clicked() {
   // cur.setPosition(insert_block.position()+insert_block.length()-1);
   cur.insertBlock();
   cur.setPosition(doc->lastBlock().position() + insert_block.length() - 1);
-  cur.insertHtml(strMsg);
+  cur.insertHtml(QString::fromStdString(strMsg));
   cur.insertHtml("<br>");
   // cur.in
 
   // 网络发送
-  Message *m = new Message();
-  QString s = "It's me", r = "It's you";
-  m->setSenderID(s.toLocal8Bit().data(), s.size());
-  m->setReciverID(r.toLocal8Bit().data(), r.size());
-  m->getMsgBody()->msgContent.append(
-      this->teMessage->toPlainText().toLocal8Bit());
-  QByteArray b = this->teMessage->toHtml().toLocal8Bit();
-  m->setMsgContent(&b);
-  this->tc->sendMessage(*m);
-  this->teMessage->setText("");
+  this->msgHandle->sendMessage(0, 0, 0, strMsg);
 }
 
 void MainWindow::stringToHtmlFilter(QString &str) {

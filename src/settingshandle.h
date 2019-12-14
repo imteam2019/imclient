@@ -13,23 +13,26 @@
 **
 **
 ****************************************************************************/
-#include <QtGlobal>
 #include <QCoreApplication>
-#include <QJsonDocument>
-#include <QFile>
 #include <QDebug>
+#include <QFile>
+#include <QJsonDocument>
+#include <QtGlobal>
+#include <iostream>
 
-class SettingsHandle
-{
-public:
-    enum enumType{JSON,XML};
-    SettingsHandle();
-    virtual ~SettingsHandle();
-    virtual QVariantMap * loadSettings(const QString *fileName,int filetype=SettingsHandle::JSON,bool isEncrypt=false);
+using namespace std;
+class SettingsHandle {
+ public:
+  enum enumType { JSON, XML };
+  SettingsHandle();
+  virtual ~SettingsHandle();
+  virtual QVariantMap *loadSettings(const QString *fileName,
+                                    int filetype = SettingsHandle::JSON,
+                                    bool isEncrypt = false);
 
-private:
-    QVariantMap * loadJson(QString *);
-    QVariantMap * loadXml(QString *);
+ private:
+  QVariantMap *loadJson(QString *);
+  QVariantMap *loadXml(QString *);
 };
 
-#endif // SETTINGSHANDLE_H
+#endif  // SETTINGSHANDLE_H
