@@ -104,6 +104,7 @@ std::istream& operator>>(std::istream& in, Message& m) {
   return in;
 }
 
+M* Message::getMessage() { return this->msg; }
 MSGSummary* Message::getMessageSummary() {
   //
   return this->msgSummary;
@@ -129,37 +130,4 @@ unsigned long Message::getMsgSize() {
       sizeof(msg->global_id) + msg->version.size() + sizeof(msg->group_id) +
       msg->gate_no.size() + sizeof(msg->is_disturb);
   return msgsize;
-}
-
-/**
- * @brief Message::toJSON  将消息转换成json格式
- * @return std::string* 失败则返回nullper
- */
-std::string* Message::toJSON() {
-  if (msg == nullptr) return nullptr;
-  std::string* strJSON = new std::string();
-  M* msg = this->msg;
-  strJSON->append("{");
-
-  strJSON->append("\"session\":\"" + msg->session + "\",");
-  strJSON->append("\"is_group_msg\":\"" + std::to_string(msg->is_group_msg) +
-                  "\",");
-  strJSON->append("\"from_user\":\"" + std::to_string(msg->from_user) + "\",");
-  strJSON->append("\"to_user\":\"" + std::to_string(msg->to_user) + "\",");
-  strJSON->append("\"msg_id\":\"" + std::to_string(msg->msg_id) + "\",");
-  strJSON->append("\"msg_type\":\"" + msg->msg_type + "\",");
-  strJSON->append("\"msg_content\":\"" + msg->msg_content + "\",");
-  strJSON->append("\"msg_time\":\"" + std::to_string(msg->msg_time) + "\",");
-  strJSON->append("\"device\":\"" + msg->device + "\",");
-  strJSON->append("\"target_device\":\"" + msg->target_device + "\",");
-  strJSON->append("\"target_user\":\"" + std::to_string(msg->target_user) +
-                  "\",");
-  strJSON->append("\"global_id\":\"" + std::to_string(msg->global_id) + "\",");
-  strJSON->append("\"version\":\"" + msg->version + "\",");
-  strJSON->append("\"group_id\":\"" + std::to_string(msg->group_id) + "\",");
-  strJSON->append("\"gate_no\":\"" + msg->gate_no + "\",");
-  strJSON->append("\"is_disturb\":\"" + std::to_string(msg->is_disturb) + "\"");
-
-  strJSON->append("}");
-  return strJSON;
 }

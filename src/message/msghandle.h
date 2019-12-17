@@ -36,7 +36,7 @@ typedef void (*PFUNC_NewSendToUI)(
 typedef void (*PFUNC_NewSendToNW)(std::string* data, unsigned int len,
                                   void* pObject);
 
-class MSGHandle : public QObject {
+class MSGHandle {
  public:
   enum MsgStatus {          //定义消息生命周期的各种状态
     MSG_STATUS_READY = 0,   //新消息，已经准备好待发送
@@ -48,7 +48,9 @@ class MSGHandle : public QObject {
   const static int MAX_SEND_COUNT = 3;
   MSGHandle();
   void init();
+  ~MSGHandle();
 
+  std::string* toJSON(Message* m);
   //网络层新数据到达回调函数
   static void newArrivalFromNW(std::string strData, size_t flag, void* pObject);
 
@@ -70,7 +72,6 @@ class MSGHandle : public QObject {
                    unsigned int to_user, std::string msg_content);
 
  private:
-  std::string* toJSON(Message* m);
   PFUNC_NewSendToUI ptrFuncNewArraivalToUI;
   void* ptrNewArraivalToUI;
 
@@ -78,6 +79,7 @@ class MSGHandle : public QObject {
   void* ptrNewSendToNW;
 
   TCPConn* tc;
+
   // Q_OBJECT
 };
 

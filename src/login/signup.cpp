@@ -104,7 +104,7 @@ void Signup::on_pbOk_clicked() {
     return;
   }
 
-  QMap<QString, QVariant> s;
+  QMap<std::string, QVariant> s;
   Encrypt en;
   std::string strRandKey;
   en.generateRSAKey();
@@ -123,9 +123,9 @@ void Signup::on_pbOk_clicked() {
     s.insert("telephone", ui->lePhoneNumber->text());
     s.insert("email", ui->leEmail->text());
     s.insert("instruction", ui->teDesc->toHtml());
-    bc = en.getAESEncrypt(Data::format(&s, Data::JSON).toLocal8Bit(),
-                          strRandKey, 0);
-    bp = en.getRSAEncrypt(strRandKey.data());
+    // bc = en.getAESEncrypt(
+    //*(new QByteArray(Data::format(&s, Data::JSON).data())), strRandKey, 0);
+    // bp = en.getRSAEncrypt(strRandKey.data());
 
     c = QString::fromLocal8Bit((*bc).toBase64());
     p = QString::fromLocal8Bit((*bp).toBase64());

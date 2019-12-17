@@ -16,15 +16,6 @@ void IMTextEdit::insertFromMimeData(const QMimeData* source) {
   }
   std::string* s = new std::string(data.data(), data.length());
   std::cout << endl << s->length() << ":" << data.length() << endl;
-  // qDebug() << data << endl;
-  /*
-    printf("\n\n\n====================\n\n");
-    int i = 0;
-    for (; i < data.size(); i++) {
-      printf("%c", data.data()[i]);
-    }
-    printf("\n\n\n\n\n");
-  */
   if (source->hasImage()) {
     static int i = 1;
 #ifdef MY_DEBUG_ON
@@ -69,9 +60,7 @@ void IMTextEdit::insertFromMimeData(const QMimeData* source) {
 
 void IMTextEdit::dropImage(const QUrl& url, const QImage& image) {
   if (!image.isNull()) {
-    // document()->addResource(QTextDocument::ImageResource, url, image);
-    // textCursor().insertImage(url.toString());
-    //针对图片进行base64编码
+    //针对图片进行html处理
 
     QByteArray array;
     QBuffer buffer(&array);

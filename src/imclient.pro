@@ -10,6 +10,7 @@ CONFIG += c++11
 
 # 自定义宏
 DEFINES += MY_DEBUG_ON
+DEFINES +=RAPIDJSON_HAS_STDSTRING
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -129,3 +130,16 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../..
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/ssl.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/ssl.lib
 else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/libssl.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/release/ -lboost_container
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/debug/ -lboost_container
+else:unix: LIBS += -L$$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/ -lboost_container
+
+INCLUDEPATH += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/include
+DEPENDPATH += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/include
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/release/libboost_container.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/debug/libboost_container.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/release/boost_container.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/debug/boost_container.lib
+else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/libboost_container.a

@@ -41,12 +41,18 @@ class Encrypt {
   std::string getMD5(std::string *data, unsigned int len);
   // static QString getBase64(QByteArray data);
   std::string getRandKey();
-  QByteArray *getRSAEncrypt(QByteArray data);
+  std::string *getRSAEncrypt(const std::string *data, unsigned int len);
   QByteArray *getRSAEncrypt(QByteArray data, std::string strPublicKey);
+  std::string *getRSAEncrypt(std::string data, unsigned int datalen,
+                             std::string strPublicKey);
   QByteArray *getRSADecrypt(QByteArray data);
+  std::string *getRSADecrypt(const std::string *data, unsigned int len);
   QByteArray *getRSADecrypt(QByteArray data, std::string strPrivateKey);
-  QByteArray *getAESEncrypt(QByteArray data, std::string strKey, int intMode);
-  QByteArray *getAESDecrypt(QByteArray data, std::string strKey, int intMode);
+
+  std::string *getAESEncrypt(const std::string *data, unsigned int datalen,
+                             std::string strKey, int intMode);
+  std::string *getAESDecrypt(const std::string *data, unsigned int datalen,
+                             std::string strKey, int intMode);
 
   static std::string *getBase64Encode(const char *buffer, long long length,
                                       bool newLine);

@@ -18,8 +18,14 @@
 #include <iostream>
 #include <map>
 #include <ostream>
+#include <sstream>  // std::stringbuf
+
+#include "common/rapidjson/document.h"
+#include "common/rapidjson/stringbuffer.h"
+#include "common/rapidjson/writer.h"
 
 using namespace std;
+using namespace rapidjson;
 
 struct M {
   std::string session = "00000000000000000000000000000000";
@@ -58,6 +64,8 @@ struct MSGSummary {
 };
 
 class Message : public QObject {
+  friend class MSGHandle;
+
  public:
   Message();
   Message(const Message &m);
@@ -71,7 +79,7 @@ class Message : public QObject {
   unsigned long getMsgSize();
   unsigned long getMsgBodySize();
 
-  std::string *toJSON();
+  M *getMessage();
   MSGSummary *getMessageSummary();
   void setMessageSummary(MSGSummary *ptrSummary);
 
@@ -80,7 +88,6 @@ class Message : public QObject {
   friend std::istream &operator>>(std::istream &in, Message &m);
 
  private:
-  friend class MSGHandle;
   M *msg;                  //消息指针
   MSGSummary *msgSummary;  //消息摘要指针
 

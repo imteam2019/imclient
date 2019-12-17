@@ -133,12 +133,12 @@ void TCPConn::doQueueEmpty(QQueue<Message> &e) {}
 void TCPConn::doSend() {
   // 将消息发送队列中的数据写入Tcp Socket发送
   Message m = this->msgSendQueue->dequeue();
-  std::string *s = m.toJSON();
-  long long i = this->ts->write(s->c_str(), m.getMsgSize());
+  // std::string *s = m.toJSON();
+  long long i = this->ts->write(nullptr, m.getMsgSize());
 #ifdef MY_DEBUG_ON
   std::cout << "Msg  size:\t" << m.getMsgSize() << endl;
   std::cout << "Send size:\t" << i << endl;
-  std::cout << *s << endl;
+
 #endif
 }
 
