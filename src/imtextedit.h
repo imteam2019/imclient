@@ -14,6 +14,8 @@
 #include <iostream>
 
 #include "common/encrypt.h"
+#include "compress/compress.h"
+#include "compress/compressjpeg.h"
 
 using namespace std;
 class IMTextEdit : public QTextEdit {

@@ -55,25 +55,48 @@ void IMTextEdit::insertFromMimeData(const QMimeData* source) {
     QTextEdit::insertFromMimeData(source);
   }
 
-  qDebug() << this->toHtml() << endl;
+  // qDebug() << this->toHtml() << endl;
 }
 
 void IMTextEdit::dropImage(const QUrl& url, const QImage& image) {
   if (!image.isNull()) {
+    // 压缩图片
+    Compress* c = new CompressJpeg();
+    unsigned long outDataLen = 0;
+    unsigned long* outSize = &outDataLen;
+    unsigned char* outbuf;
+    outbuf = c->compress(image.bits(), image.width() * image.height(),
+                         image.width(), image.height(), outSize);
+    if (outbuf == nullptr) {
+      printf("Jpeg comress error.\n");
+      return;
+    }
+    QImage qi = QImage::fromData(outbuf, outDataLen, "jpg");
+    // QImage qi = image;
     //针对图片进行html处理
 
     QByteArray array;
     QBuffer buffer(&array);
-    image.save(&buffer, "png", 1);
+    // image.save(&buffer, "png", 1);
+    image.save("/Users/anthony.shengbo.zeng/Desktop/image.jpg", "jpg", 100);
+    qi.save("/Users/anthony.shengbo.zeng/Desktop/qi.jpg", "jpg", 75);
+    qi.save(&buffer, "jpg", 100);
+    QImage qa = QImage::fromData(array, "jpg");
+    qa.save("/Users/anthony.shengbo.zeng/Desktop/qa.png", "jpg", 75);
 
     qDebug() << "image size:Compress -1 size:\t" << image.sizeInBytes() << ":"
-             << array.size() << endl;
+             << qi.sizeInBytes() << ":" << array.size() << ":" << outDataLen
+             << endl;
+    qDebug() << "libjpeg compress radio:\t"
+             << qi.sizeInBytes() / image.sizeInBytes() * 100 << "%" << endl;
+    qDebug() << "QImage compress radio:\t"
+             << array.size() / qi.sizeInBytes() * 100 << "%" << endl;
     buffer.close();
 
     /*! 数据转base64 */
     QByteArray base64Array = array.toBase64();
     QByteArray comImageArray =
-        "<img src=data:image/png;base64," + base64Array + "/>";
+        "<img src=data:image/jpg;base64," + base64Array + "/>";
 
     textCursor().insertHtml(QString(comImageArray));
   }

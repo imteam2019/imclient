@@ -35,6 +35,40 @@ std::string Data::format(QMap<std::string, QVariant> *data, int formatName) {
   return *s;
 }
 
+std::string *Data::compressText(const std::string *srcData, unsigned long len) {
+  if (srcData == nullptr || srcData->size() <= 0 || srcData->size() < len)
+    return nullptr;
+
+  uLongf dataLen = len + 1;  //加上最后字符串终止符
+  uLongf bufLen = 0;  //目标缓冲区长度，初始时未知，后面计算得出；
+  char *buf = nullptr;  //目标缓冲区指针
+
+  /* 计算缓冲区大小，并为其分配内存 */
+  bufLen = compressBound(dataLen); /* 压缩后的长度是不会超过blen的 */
+  if ((buf = (char *)malloc(sizeof(char) * bufLen)) == nullptr) {
+    printf("no enough memory!\n");
+    return nullptr;
+  }
+  if (compress((Bytef *)buf, &bufLen, (Bytef *)srcData->c_str(), dataLen) !=
+      Z_OK) {
+    printf("compress failed!\n");
+    return nullptr;
+  }
+
+#ifdef MY_DEBUG_ON
+  printf("the content be compressed size is:\t%i\n", bufLen);
+#endif
+  std::string *b = new std::string(buf, bufLen);
+  return b;
+}
+
+/**
+ * @brief Data::format
+ * @param data
+ * @param formatName
+ * @return
+ */
+// TODO 此处代码需要重新审视
 std::string *Data::format(boost::unordered_map<std::string, boost::any> *data,
                           int formatName) {
   if (data == nullptr || data->size() == 0) return nullptr;

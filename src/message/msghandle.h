@@ -19,6 +19,7 @@
 #include <queue>
 
 #include "common/encrypt.h"
+#include "data.h"
 #include "message/message.h"
 #include "network/tcpconn.h"
 

@@ -47,7 +47,7 @@ QByteArray *Encrypt::encrypt(const QByteArray *byteMsg) {
 /**
  * @brief Encrypt::encrypt
  * @param strMsg
- * @return QString * 加密后的QString指针，
+ * @return std::string * 加密后的std::string指针，
  * 如入参为空指针或无数据，则返回空指针；
  * @desc 对QString类型的消息进行加密，纯文本类型；
  */

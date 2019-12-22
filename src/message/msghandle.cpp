@@ -74,9 +74,15 @@ void MSGHandle::sendMessage(unsigned int is_group_msg, unsigned int from_user,
   std::string *json = this->toJSON(msg);
   std::string *base64 = Encrypt::getBase64Encode(
       json->c_str(), msg->msgSummary->msg_length, false);
-  cout << endl << *json << endl;
-  cout << endl << *base64 << endl;
-  this->tc->sendMessage(base64, base64->length());
+  // cout << endl << *json << endl;
+  // cout << endl << *base64 << endl;
+
+  // 测试压缩
+  printf("the content before compressing size is:\t%i\n", base64->size());
+  std::string *com = Data::compressText(base64, base64->size());
+  // cout << endl << *com << endl;
+
+  // this->tc->sendMessage(base64, base64->length());
 }
 
 std::string *MSGHandle::toJSON(Message *m) {
@@ -107,7 +113,7 @@ std::string *MSGHandle::toJSON(Message *m) {
   std::string *b = new std::string(jsonBuffer.GetString());
 
 #ifdef MY_DEBUG_ON
-  std::cout << jsonBuffer.GetString() << endl;
+  // std::cout << jsonBuffer.GetString() << endl;
 #endif
 
   return b;
