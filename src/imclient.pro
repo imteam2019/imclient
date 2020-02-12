@@ -2,6 +2,7 @@ QT       += core gui
 QT       += network
 
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -37,11 +38,22 @@ SOURCES += \
     message/data.cpp \
     message/message.cpp \
     message/msghandle.cpp \
+    model/config.cpp \
+    model/singleton.cpp \
     network/httpconn.cpp \
     network/tcpconn.cpp \
     newfriend.cpp \
     person.cpp \
     settingshandle.cpp \
+    storage/sqlitehandle.cpp \
+    ui/collapseview.cpp \
+    ui/collapseviewitem.cpp \
+    ui/colorpickform.cpp \
+    ui/litteriem.cpp \
+    ui/loginform.cpp \
+    ui/mainform.cpp \
+    ui/messageform.cpp \
+    ui/moveableframelesswindow.cpp
 
 HEADERS += \
     common/encrypt.h \
@@ -92,72 +104,71 @@ HEADERS += \
     message/data.h \
     message/message.h \
     message/msghandle.h \
+    model/config.h \
+    model/singleton.h \
     network/httpconn.h \
     network/tcpconn.h \
     newfriend.h \
     person.h \
     settingshandle.h \
+    storage/sqlitehandle.h \
+    ui/collapseview.h \
+    ui/collapseviewitem.h \
+    ui/colorpickform.h \
+    ui/litteriem.h \
+    ui/loginform.h \
+    ui/mainform.h \
+    ui/messageform.h \
+    ui/moveableframelesswindow.h
 
 FORMS += \
     login/signin.ui \
     login/signup.ui \
     mainwindow.ui \
     newfriend.ui \
+    ui/collapseview.ui \
+    ui/collapseviewitem.ui \
+    ui/colorpickform.ui \
+    ui/litteriem.ui \
+    ui/loginform.ui \
+    ui/mainform.ui \
+    ui/messageform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/release/ -lcrypto
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/debug/ -lcrypto
-else:unix: LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/ -lcrypto
 
-INCLUDEPATH += $$PWD/../../../../../usr/local/openssl/include
-DEPENDPATH += $$PWD/../../../../../usr/local/openssl/include
+RESOURCES += \
+    #../rs/rs.qrc \
+    rs/rs.qrc
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/libcrypto.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/libcrypto.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/crypto.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/crypto.lib
-else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/libcrypto.a
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/release/ -lssl
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/debug/ -lssl
-else:unix: LIBS += -L$$PWD/../../../../../usr/local/openssl/lib/ -lssl
+unix: LIBS += -L$$PWD/../../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/ -lcrypto
 
-INCLUDEPATH += $$PWD/../../../../../usr/local/openssl/include
-DEPENDPATH += $$PWD/../../../../../usr/local/openssl/include
+INCLUDEPATH += $$PWD/../../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/include
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/libssl.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/libssl.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/release/ssl.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/debug/ssl.lib
-else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/openssl/lib/libssl.a
+unix: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/Cellar/openssl@1.1/1.1.1d/lib/libcrypto.a
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/release/ -lboost_container
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/debug/ -lboost_container
-else:unix: LIBS += -L$$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/ -lboost_container
+unix: LIBS += -L$$PWD/../../../../../../usr/local/Cellar/boost/1.72.0/lib/ -lboost_container
 
-INCLUDEPATH += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/include
-DEPENDPATH += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/include
+INCLUDEPATH += $$PWD/../../../../../../usr/local/Cellar/boost/1.72.0/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/Cellar/boost/1.72.0/include
 
-win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/release/libboost_container.a
-else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/debug/libboost_container.a
-else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/release/boost_container.lib
-else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/debug/boost_container.lib
-else:unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/boost/1.71.0/lib/libboost_container.a
+unix: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/Cellar/boost/1.72.0/lib/libboost_container.a
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../../usr/local/Cellar/zlib/1.2.11/lib/release/ -lz.1.2.11
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../../usr/local/Cellar/zlib/1.2.11/lib/debug/ -lz.1.2.11
-else:unix: LIBS += -L$$PWD/../../../../../usr/local/Cellar/zlib/1.2.11/lib/ -lz.1.2.11
 
-INCLUDEPATH += $$PWD/../../../../../usr/local/Cellar/zlib/1.2.11/include
-DEPENDPATH += $$PWD/../../../../../usr/local/Cellar/zlib/1.2.11/include
+unix: LIBS += -L$$PWD/../../../../../../usr/local/Cellar/zlib/1.2.11/lib/ -lz
 
-unix: LIBS += -L$$PWD/../../../../../usr/local/Cellar/jpeg-turbo/2.0.3/lib/ -lturbojpeg
+INCLUDEPATH += $$PWD/../../../../../../usr/local/Cellar/zlib/1.2.11/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/Cellar/zlib/1.2.11/include
 
-INCLUDEPATH += $$PWD/../../../../../usr/local/Cellar/jpeg-turbo/2.0.3/include
-DEPENDPATH += $$PWD/../../../../../usr/local/Cellar/jpeg-turbo/2.0.3/include
+unix: PRE_TARGETDEPS += $$PWD/../../../../../../usr/local/Cellar/zlib/1.2.11/lib/libz.a
 
-unix: PRE_TARGETDEPS += $$PWD/../../../../../usr/local/Cellar/jpeg-turbo/2.0.3/lib/libturbojpeg.a
+
+unix: LIBS += -L$$PWD/../../../../../../usr/local/Cellar/jpeg-turbo/2.0.4/lib/ -lturbojpeg.0.2.0
+
+INCLUDEPATH += $$PWD/../../../../../../usr/local/Cellar/jpeg-turbo/2.0.4/include
+DEPENDPATH += $$PWD/../../../../../../usr/local/Cellar/jpeg-turbo/2.0.4/include

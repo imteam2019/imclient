@@ -14,6 +14,7 @@
 #include "message/data.h"
 #include "message/message.h"
 #include "network/tcpconn.h"
+#include "ui/loginform.h"
 
 template <class T>
 void foo(T) {
@@ -154,7 +155,7 @@ int main(int argc, char *argv[]) {
 */
 
   QApplication a(argc, argv);
-  MainWindow w;
+  LoginForm w;
   w.show();
   return a.exec();
 

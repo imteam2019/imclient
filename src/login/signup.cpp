@@ -191,3 +191,9 @@ void Signup::on_teDesc_textChanged() {
 
   ui->lbDescLength->setText(QString::number(i, 10) + "/100");
 }
+
+void Signup::on_pbSelPic_clicked() {
+  QString fileName = QFileDialog::getOpenFileName(
+      this, tr("open file"), " ",
+      tr("Allfile(*.*);;png file(*.png);;jpg file(*.jpg);;jpeg file(*.jpeg)"));
+}

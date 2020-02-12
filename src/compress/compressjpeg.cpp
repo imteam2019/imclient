@@ -15,6 +15,7 @@ void CompressJpeg::init() {
 CompressJpeg::~CompressJpeg() {
   jpeg_destroy_compress(cinfo);
   delete this->cinfo;
+  delete this->jerr;
 }
 /**
  * @brief CompressJpeg::compress 对指定缓冲区内的图片数据进行压缩
@@ -27,10 +28,11 @@ unsigned char *CompressJpeg::compress(const unsigned char *inData,
                                       unsigned long inDataLen,
                                       unsigned long width, unsigned long height,
                                       unsigned long *outDataLen) {
-  if (inData == nullptr || 0 == inDataLen || 0 == width || 0 == height)
+  if (inData == nullptr || 0 == inDataLen || 0 == width || 0 == height ||
+      outDataLen == nullptr)
     return nullptr;
 
-  unsigned char *outBuffer = nullptr;
+  JSAMPROW outBuffer = nullptr;
 
   JSAMPROW image_buffer;
   JDIMENSION image_width = width;

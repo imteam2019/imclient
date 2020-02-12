@@ -5,7 +5,7 @@
 Person::Person() {
   this->strID = new std::string();
   this->strNickName = new std::string();
-  this->strSign = new std::string();
+  this->strSignature = new std::string();
   this->intStatus = Person::online;
 }
 
@@ -17,7 +17,7 @@ Person::Person(const Person &person) {
 Person::~Person() {
   delete this->strID;
   delete this->strNickName;
-  delete this->strSign;
+  delete this->strSignature;
 }
 
 Person &Person::operator=(const Person &p) {
@@ -69,14 +69,14 @@ void Person::setNickName(std::string nickName) {
  * @brief Person::getSign 获取签名
  * @return 返回当前签名
  */
-std::string Person::getSign() { return *this->strSign; }
+std::string Person::getSignature() { return *this->strSignature; }
 
 /**
  * @brief Person::setSign 根据指定字符串设定签名
  * @param strSign
  */
-void Person::setSign(std::string strSign) {
-  if (strSign.length() > 0) *this->strSign = strSign;
+void Person::setSignature(std::string strSign) {
+  if (strSign.length() > 0) *this->strSignature = strSign;
 }
 
 /**

@@ -135,6 +135,9 @@
    <property name="text">
     <string>1234567890</string>
    </property>
+   <property name="echoMode">
+    <enum>QLineEdit::PasswordEchoOnEdit</enum>
+   </property>
   </widget>
   <widget class="QLineEdit" name="lePasswdRe">
    <property name="geometry">
@@ -150,6 +153,9 @@
    </property>
    <property name="text">
     <string>1234567890</string>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::PasswordEchoOnEdit</enum>
    </property>
   </widget>
   <widget class="QLineEdit" name="leEmail">
@@ -225,6 +231,41 @@
    </property>
    <property name="text">
     <string>100/100</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblMyLogo">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>40</y>
+     <width>101</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>头像</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbSelPic">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>150</y>
+     <width>112</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>选择...</string>
    </property>
   </widget>
  </widget>

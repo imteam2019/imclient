@@ -2,6 +2,7 @@
 #define SIGNUP_H
 
 #include <QDialog>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <iostream>
 
@@ -32,6 +33,8 @@ class Signup : public QDialog {
   void on_pbOk_clicked();
   void on_pbCancel_clicked();
   void on_teDesc_textChanged();
+
+  void on_pbSelPic_clicked();
 
  private:
   Ui::Signup *ui;

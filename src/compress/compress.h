@@ -22,14 +22,14 @@
 using namespace std;
 class Compress {
  public:
-  explicit Compress();
+  // explicit Compress();
   virtual ~Compress() = 0;
   virtual unsigned char *compress(const unsigned char *inData,
-                                  unsigned long inDataLen, unsigned long width,
-                                  unsigned long height,
-                                  unsigned long *outDataLen) = 0;
+                                  unsigned long inDataLen,
+                                  unsigned long width = 0,
+                                  unsigned long height = 0,
+                                  unsigned long *outDataLen = nullptr) = 0;
 
- protected:
   virtual void init() = 0;
 };
 

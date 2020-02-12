@@ -25,11 +25,10 @@ class CompressJpeg : public Compress {
                           unsigned long width, unsigned long height,
                           unsigned long *outDataLen) override;
 
- protected:
   void init() override;
 
  private:
-  int quality = 28;
+  int quality = 90;
   struct jpeg_compress_struct *cinfo;
   struct jpeg_error_mgr *jerr;
 };
