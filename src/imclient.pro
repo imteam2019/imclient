@@ -1,5 +1,6 @@
 QT       += core gui
 QT       += network
+QT       += sql
 
 
 
@@ -27,8 +28,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     common/encrypt.cpp \
+    common/tools.cpp \
     compress/compress.cpp \
     compress/compressjpeg.cpp \
+    configure/basicconfigure.cpp \
+    configure/configure.cpp \
+    configure/dbconfigure.cpp \
     friends.cpp \
     imtextedit.cpp \
     login/signin.cpp \
@@ -94,8 +99,12 @@ HEADERS += \
     common/rapidjson/stream.h \
     common/rapidjson/stringbuffer.h \
     common/rapidjson/writer.h \
+    common/tools.h \
     compress/compress.h \
     compress/compressjpeg.h \
+    configure/basicconfigure.h \
+    configure/configure.h \
+    configure/dbconfigure.h \
     friends.h \
     imtextedit.h \
     login/signin.h \
@@ -172,3 +181,4 @@ unix: LIBS += -L$$PWD/../../../../../../usr/local/Cellar/jpeg-turbo/2.0.4/lib/ -
 
 INCLUDEPATH += $$PWD/../../../../../../usr/local/Cellar/jpeg-turbo/2.0.4/include
 DEPENDPATH += $$PWD/../../../../../../usr/local/Cellar/jpeg-turbo/2.0.4/include
+

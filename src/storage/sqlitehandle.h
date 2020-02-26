@@ -17,24 +17,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <QDebug>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <algorithm>
 #include <iostream>
 #include <list>
 #include <string>
+
+#include "configure/configure.h"
+#include "configure/dbconfigure.h"
+
 using namespace std;
 class SqliteHandle {
  public:
   enum DBStatus { closed, opend };
-  enum DataType { person, message };
-  SqliteHandle(std::string* dbName);
+  SqliteHandle();
+  ~SqliteHandle();
   inline bool isOpend() { return this->sqlitedbstatus == SqliteHandle::opend; }
-  int read(list<void*>* dataList, int flag);
-  // int save(list<void*>* datalist, int flag);
+  int exec(std::string sql, vector<std::string> *values,
+           list<map<std::string, std::string> *> *results = nullptr);
 
  private:
   int sqlitedbstatus =
       SqliteHandle::closed;  //记录db状态，0:空闲可打开状态，1:已打开状态
-  sqlite3* conn = nullptr;
-  sqlite3_stmt* stmt = nullptr;
+                             // sqlite3 *conn = nullptr;
+                             //  sqlite3_stmt *stmt = nullptr;
+  DBConfigure *dbc = nullptr;
+  QSqlDatabase db;
+  QSqlQuery *qry;
 };
 
 #endif  // SQLITEHANDLE_H

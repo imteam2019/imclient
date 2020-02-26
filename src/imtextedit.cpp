@@ -1,6 +1,6 @@
 #include "imtextedit.h"
 
-IMTextEdit::IMTextEdit() {}
+IMTextEdit::IMTextEdit(QWidget *parrent) {}
 
 bool IMTextEdit::canInsertFromMimeData(const QMimeData* source) const {
   return source->hasImage() || source->hasUrls() ||

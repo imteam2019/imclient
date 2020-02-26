@@ -11,9 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
   this->osFormat = new QTextFrameFormat();
   this->setMsgStyle();
 
-  this->teMessage = new IMTextEdit();
-  this->teMessage->setParent(this);
-  this->teMessage->setGeometry(220, 420, 411, 141);
+  this->teMessage = new IMTextEdit(ui->tab);
+
+  this->teMessage->setParent(ui->tab);
+  this->teMessage->setGeometry(ui->tbList->geometry().left(),
+                               ui->tbList->y() + ui->tbList->height(), 411,
+                               141);
   this->teMessage->setDisabled(false);
   this->teMessage->setHidden(false);
   this->teMessage->setReadOnly(false);
@@ -78,6 +81,27 @@ MainWindow::MainWindow(QWidget *parent)
 
   this->tc = new TCPConn();
   this->msgHandle = new MSGHandle();
+  this->sh = new SqliteHandle();
+  /*  int i;
+    list<map<std::string, std::string> *> *l =
+        new list<map<std::string, std::string> *>;
+
+    std::list<std::string> *c = new std::list<std::string>();
+    c->push_front("44206711");
+    list<map<std::string, std::string> *>::iterator it;
+    map<std::string, std::string> *p;
+    map<std::string, std::string>::iterator pit;
+    i = this->sh->read(4002, l, c);
+    if (i > 0) {
+      for (it = l->begin(); it != l->end(); it++) {
+        p = *it;
+        for (pit = p->begin(); pit != p->end(); ++pit) {
+          qDebug() << pit->first.data() << ":" << pit->second.data();
+        }
+        qDebug() << endl;
+      }
+    }
+    qDebug() << i << endl;*/
 }
 
 MainWindow::~MainWindow() {
@@ -139,6 +163,11 @@ bool MainWindow::setMsgStyle() {
 }
 
 void MainWindow::on_btnSendMsg_clicked() {
+  // 不允许发送空消息
+  if (this->teMessage->toPlainText().length() <= 0) {
+    QMessageBox::information(this, "Error:", "Can't send empty message.");
+    return;
+  }
   std::string strMsg;
   Person *p = new Person;
 
@@ -161,6 +190,8 @@ void MainWindow::on_btnSendMsg_clicked() {
 
   // 网络发送
   this->msgHandle->sendMessage(0, 0, 0, strMsg);
+
+  this->teMessage->setText("");
 }
 
 void MainWindow::stringToHtmlFilter(QString &str) {

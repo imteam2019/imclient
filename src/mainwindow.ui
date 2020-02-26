@@ -7,89 +7,144 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>IM</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListView" name="lvFriends">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>80</y>
-      <width>191</width>
-      <height>501</height>
+      <x>19</x>
+      <y>10</y>
+      <width>761</width>
+      <height>541</height>
      </rect>
     </property>
-    <property name="layoutMode">
-     <enum>QListView::SinglePass</enum>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-    <property name="viewMode">
-     <enum>QListView::ListMode</enum>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="tbList">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>80</y>
-      <width>571</width>
-      <height>301</height>
-     </rect>
-    </property>
-    <property name="autoFormatting">
-     <set>QTextEdit::AutoAll</set>
-    </property>
-    <property name="readOnly">
-     <bool>false</bool>
-    </property>
-    <property name="openLinks">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnSendMsg">
-    <property name="geometry">
-     <rect>
-      <x>700</x>
-      <y>470</y>
-      <width>91</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Send</string>
-    </property>
-    <property name="shortcut">
-     <string>Meta+S</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnAddFriend">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>50</y>
-      <width>41</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>60</y>
-      <width>58</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>我的好友</string>
-    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Tab 1</string>
+     </attribute>
+     <widget class="QTextBrowser" name="tbList">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>30</y>
+        <width>571</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="autoFormatting">
+       <set>QTextEdit::AutoAll</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="openLinks">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnSendMsg">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>190</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Send</string>
+      </property>
+      <property name="shortcut">
+       <string>Meta+S</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="lwSesstions">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>161</width>
+        <height>271</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+     <widget class="QPushButton" name="btnAddFriend">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>0</y>
+        <width>41</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>+</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>210</y>
+        <width>58</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>我的好友</string>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="twMyFriends">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>240</y>
+        <width>161</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string notr="true">1</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>58</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>我的群组</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="lwMyGroups">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>161</width>
+        <height>141</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

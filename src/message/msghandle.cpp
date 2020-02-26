@@ -6,7 +6,7 @@ MSGHandle::MSGHandle() {
 }
 
 void MSGHandle::init() {
-  this->tc = new TCPConn();
+  // this->tc = new TCPConn();
 
   return;
 }

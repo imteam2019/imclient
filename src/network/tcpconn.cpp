@@ -13,9 +13,9 @@ TCPConn::TCPConn() {
   connect(this->ts, SIGNAL(readyRead()), this, SLOT(doReadyRead()));
   // connect(this->msgSendQueue, SIGNAL(newArrival()), this, SLOT(doSend()));
 #ifdef MY_DEBUG_ON
-  std::cout << "调试开关已打开，当前处于调试状态.";
+  std::cout << "当前处于调试状态." << endl;
 #else
-  std::cout << "调试开关已关闭";
+  std::cout << "调试开关已关闭" << endl;
 #endif
   this->loadQueueFromFile();
   this->ts->connectToHost("47.88.231.69", 8000, QAbstractSocket::ReadWrite);
@@ -129,7 +129,6 @@ void TCPConn::doQueueEmpty(QQueue<Message> &e) {}
 /**
  * @brief TCPConn::doSend 发送Message实例数据。如果成功则返回，否则，计数器减1。
  */
-
 void TCPConn::doSend() {
   // 将消息发送队列中的数据写入Tcp Socket发送
   Message m = this->msgSendQueue->dequeue();

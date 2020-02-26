@@ -20,7 +20,7 @@
 using namespace std;
 class IMTextEdit : public QTextEdit {
  public:
-  IMTextEdit();
+  IMTextEdit(QWidget *parent=nullptr);
   bool canInsertFromMimeData(const QMimeData* source) const;
   void insertFromMimeData(const QMimeData* source);
 

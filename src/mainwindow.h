@@ -12,6 +12,7 @@
 #include "message/message.h"
 #include "message/msghandle.h"
 #include "network/tcpconn.h"
+#include "storage/sqlitehandle.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,6 +21,9 @@ class MainWindow;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
+ signals:
+  void msgWritingEmpty();
+
  public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
@@ -47,6 +51,7 @@ class MainWindow : public QMainWindow {
   void stringToHtmlFilter(QString &str);
   void stringToHtml(QString &str, QColor crl);
   IMTextEdit *teMessage;
+  SqliteHandle *sh = nullptr;
 
   void registCallBack();
   Q_OBJECT
