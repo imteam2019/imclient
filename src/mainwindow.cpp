@@ -81,7 +81,6 @@ MainWindow::MainWindow(QWidget *parent)
 
   this->tc = new TCPConn();
   this->msgHandle = new MSGHandle();
-  this->sh = new SqliteHandle();
   /*  int i;
     list<map<std::string, std::string> *> *l =
         new list<map<std::string, std::string> *>;
@@ -162,6 +161,7 @@ bool MainWindow::setMsgStyle() {
   return true;
 }
 
+bool MainWindow::setFriendsList() { return true; }
 void MainWindow::on_btnSendMsg_clicked() {
   // 不允许发送空消息
   if (this->teMessage->toPlainText().length() <= 0) {

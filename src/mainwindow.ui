@@ -148,6 +148,11 @@
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionChange_Password">
+   <property name="text">
+    <string>Change Password</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

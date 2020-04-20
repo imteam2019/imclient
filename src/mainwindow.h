@@ -7,11 +7,17 @@
 #include <QTextBlock>
 #include <QTextDocument>
 #include <QTextFrame>
+#include <list>
+#include <map>
 
+#include "configure/basicconfigure.h"
+#include "configure/configure.h"
+#include "configure/dbconfigure.h"
 #include "imtextedit.h"
 #include "message/message.h"
 #include "message/msghandle.h"
 #include "network/tcpconn.h"
+#include "person.h"
 #include "storage/sqlitehandle.h"
 
 QT_BEGIN_NAMESPACE
@@ -40,19 +46,20 @@ class MainWindow : public QMainWindow {
       void *pObject);
  private slots:
   void on_btnSendMsg_clicked();
-
   void on_btnAddFriend_clicked();
 
  private:
   Ui::MainWindow *ui;
   QTextFrameFormat *myFormat;
   QTextFrameFormat *osFormat;
+  IMTextEdit *teMessage;
+  list<Person *> *lstmyfriends;
+
+ private:
+  bool setFriendsList();
   bool setMsgStyle();
   void stringToHtmlFilter(QString &str);
   void stringToHtml(QString &str, QColor crl);
-  IMTextEdit *teMessage;
-  SqliteHandle *sh = nullptr;
-
   void registCallBack();
   Q_OBJECT
 };

@@ -37,10 +37,6 @@ using rapidjson::Document;
 using rapidjson::Value;
 class Configure {
  public:
-  // Configure();
-  ~Configure();
-  // static void init();
-
   inline static DBConfigure* getDBConfig() { return Configure::dbconfig; };
   inline static BasicConfigure* getBasicConfig() {
     return Configure::basicconfig;
@@ -49,12 +45,6 @@ class Configure {
  private:
   static BasicConfigure* basicconfig;
   static DBConfigure* dbconfig;
-
-  static bool isready;
-
- private:
-  // static void initConfigures();
-  // void initDB();
 };
 
 #endif  // CONFIGURE_H

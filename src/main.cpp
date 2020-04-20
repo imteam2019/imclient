@@ -23,17 +23,10 @@
 int main(int argc, char *argv[]) {
   // SqliteHandle *sh = new SqliteHandle();
 
-  // QApplication a(argc, argv);
-  // MainWindow w;
+  QApplication a(argc, argv);
+  MainWindow w;
   Configure *config = new Configure();
-  /*
-  qDebug() << "Application Dir Path:\t"
-           << QCoreApplication::applicationDirPath() << endl;
-  qDebug() << "Application File Path:\t"
-           << QCoreApplication::applicationFilePath() << endl;
-  qDebug() << "QDir::currentPath:\t" << QDir::currentPath() << endl;
-*/
-
-  // w.show();
-  // return a.exec();
+  config->getBasicConfig()->getDbfilename();
+  w.show();
+  return a.exec();
 }

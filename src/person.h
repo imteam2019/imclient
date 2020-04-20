@@ -13,7 +13,7 @@
 **
 **
 ****************************************************************************/
-#include <common/tools.h>
+#include <common/common.h>
 
 #include <list>
 #include <map>
@@ -70,7 +70,7 @@ class Person {
   int getConstellations();
   void setConstellations(int);
 
-  const std::string getBirthday();
+  const std::string getBirthday() const;
   void setBirthday(std::string);
 
   const std::string getMobile() const;

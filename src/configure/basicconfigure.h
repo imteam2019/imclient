@@ -54,6 +54,7 @@ class BasicConfigure {
   std::string appname = "";      //应用程序名称
   std::string appversion = "";   //应用程序版本号
   std::string applocation = "";  //应用程序位置
+  // todo worklocation 在release之前应该做动态处理
   std::string worklocation = "/Users/shengbo.zeng/OneDrive/im";  //工作目录位置
   std::string cachelocation = "";         //缓存区目录位置
   std::string datalocation = "";          //数据目录位置

@@ -151,7 +151,7 @@ void Person::setConstellations(int cs) {
   this->Constellations = cs;
 }
 
-const std::string Person::getBirthday() { return *this->Birthday; }
+const std::string Person::getBirthday() const { return *this->Birthday; }
 void Person::setBirthday(std::string birthday) {
   // todo 需要进行日期字符串有效性验证
   if (birthday.length() <= 0) return;
